@@ -1,0 +1,3 @@
+# Projects (Current and Future)
+
+This is where good intentions meet reality checks. You'll find a mix of "definitely finishing this" and "seemed like a good idea at 3 AM" projects. Current builds include functional solutions that actually work, ambitious software experiments in various stages of completion, and at least one game development project that's teaching me why indie devs drink so much coffee. Future projects exist in that magical realm where scope creep hasn't hit yet and everything seems perfectly achievable. Fair warning: timelines are more like friendly suggestions than actual commitments.
