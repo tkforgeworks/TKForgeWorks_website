@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   getContentBySlug,
@@ -54,6 +55,19 @@ export default async function ProjectPage({
       >
         &larr; Back to Projects
       </Link>
+
+      {frontmatter.heroImage && (
+        <div className="mt-6 overflow-hidden rounded-lg">
+          <Image
+            src={frontmatter.heroImage}
+            alt={frontmatter.heroAlt || frontmatter.title}
+            width={800}
+            height={450}
+            className="h-auto w-full object-cover"
+            priority
+          />
+        </div>
+      )}
 
       <h1 className="mt-6 font-sans text-3xl font-bold text-purple-primary md:text-4xl">
         {frontmatter.title}

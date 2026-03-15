@@ -12,6 +12,8 @@ export interface ProjectFrontmatter {
   excerpt: string;
   tech: string[];
   featured: boolean;
+  heroImage?: string;
+  heroAlt?: string;
   images?: string[];
   github?: string;
   demo?: string;

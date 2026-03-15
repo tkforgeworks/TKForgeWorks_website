@@ -4,6 +4,8 @@ status: "Completed"
 excerpt: "3D-printed modular organization system that actually tamed the cable chaos"
 tech: ["3D Printing", "CAD", "Hardware"]
 featured: true
+heroImage: "/images/widebody-m2.jpg"
+heroAlt: "Placeholder image — widebody BMW M2 in a hangar (replace with actual project photo)"
 ---
 
 A modular organization system designed and 3D-printed to solve real kitchen storage problems. One of the rare projects that's actually finished and in daily use.

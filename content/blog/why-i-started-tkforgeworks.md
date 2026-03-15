@@ -18,6 +18,10 @@ By day, I'm a mechanical engineer herding cross-functional teams to bring transi
 
 TK ForgeWorks is where I get to ask "what if?" without submitting a change request form. Where I can overengineer a kitchen organizer just because I want to. Where I can decide to build an entire action RPG as my first game development project and have nobody around to tell me that's an absurd scope for a solo developer with no art skills.
 
+Here's a peek at one of my side quests — a custom split keyboard layout I designed for my Iris keyboard. Because apparently a normal keyboard wasn't complicated enough:
+
+![Iris split keyboard layout showing three layers of custom key mappings](/images/iris-keyboard-layout.png)
+
 The name itself is half-serious, half-aspirational. "TK" for my initials. "ForgeWorks" because I liked romanticizing the idea of a one-person workshop where raw materials become useful things through sheer stubbornness. Like a blacksmith, except instead of horseshoes, I'm making things that occasionally compile.
 
 ## What's Here

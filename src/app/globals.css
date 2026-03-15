@@ -212,3 +212,11 @@ pre code {
   color: var(--text-secondary);
   font-style: italic;
 }
+
+.prose img {
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 100%;
+  height: auto;
+}

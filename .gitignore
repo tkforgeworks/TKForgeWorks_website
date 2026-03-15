@@ -35,3 +35,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# placeholder images (not owned — replace before publishing)
+public/images/iris-keyboard-layout.png
+public/images/widebody-m2.jpg
+public/images/mkv-supra.jpg
