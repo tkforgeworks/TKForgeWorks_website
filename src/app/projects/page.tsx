@@ -28,7 +28,7 @@ export default function ProjectsPage() {
             <Link
               key={project.slug}
               href={`/projects/${project.slug}`}
-              className="group rounded-lg border border-purple-tint bg-white p-6 no-underline transition-shadow hover:shadow-md"
+              className="group rounded-lg border border-purple-tint bg-background p-6 no-underline transition-shadow hover:shadow-md"
             >
               <h2 className="font-sans text-lg font-semibold text-purple-primary group-hover:text-purple-secondary">
                 {project.frontmatter.title}

@@ -2,21 +2,21 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  /* Brand Colors */
+  /* Brand Colors - Light */
   --purple-primary: #6b46c1;
   --purple-secondary: #7c3aed;
   --purple-dark: #553c9a;
   --purple-tint: #ede9fe;
 
-  /* Text Colors */
+  /* Text Colors - Light */
   --text-primary: #334155;
   --text-secondary: #64748b;
 
-  /* Background */
+  /* Background - Light */
   --background: #ffffff;
   --background-light: #f8fafc;
 
-  /* Semantic Colors */
+  /* Semantic Colors - Light */
   --error-primary: #dc2626;
   --error-light: #fef2f2;
   --error-text: #991b1b;
@@ -30,10 +30,46 @@
   --info-light: #f0f9ff;
   --info-text: #0c4a6e;
 
+  /* Border */
+  --border: #e2e8f0;
+
   /* Fonts */
   --font-header: "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: "Source Serif 4", Georgia, serif;
   --font-code: "JetBrains Mono", Monaco, Menlo, monospace;
+}
+
+.dark {
+  /* Brand Colors - Dark */
+  --purple-primary: #a855f7;
+  --purple-secondary: #8b5cf6;
+  --purple-dark: #c4b5fd;
+  --purple-tint: #312e81;
+
+  /* Text Colors - Dark */
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e1;
+
+  /* Background - Dark */
+  --background: #0f172a;
+  --background-light: #1e293b;
+
+  /* Semantic Colors - Dark */
+  --error-primary: #f87171;
+  --error-light: #450a0a;
+  --error-text: #fca5a5;
+  --success-primary: #4ade80;
+  --success-light: #052e16;
+  --success-text: #86efac;
+  --warning-primary: #fbbf24;
+  --warning-light: #451a03;
+  --warning-text: #fcd34d;
+  --info-primary: #38bdf8;
+  --info-light: #082f49;
+  --info-text: #7dd3fc;
+
+  /* Border */
+  --border: #334155;
 }
 
 @theme inline {
@@ -48,6 +84,8 @@
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
+
+  --color-border: var(--border);
 
   --color-error: var(--error-primary);
   --color-error-light: var(--error-light);
@@ -68,6 +106,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.7;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -95,6 +134,10 @@ pre {
   border-radius: 8px;
   line-height: 1.5;
   overflow-x: auto;
+}
+
+.dark pre {
+  background: #0f172a;
 }
 
 pre code {
@@ -135,6 +178,7 @@ pre code {
 .prose p {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
+  color: var(--text-primary);
 }
 
 .prose ul, .prose ol {
@@ -145,6 +189,7 @@ pre code {
 .prose li {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .prose strong {

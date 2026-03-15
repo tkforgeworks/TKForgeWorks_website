@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -34,19 +35,36 @@ export const metadata: Metadata = {
     "Mechanical engineer turned creative problem solver. Building games, tools, and solutions through trial, error, and stubborn persistence.",
 };
 
+// Inline script to set theme before first paint, preventing flash
+const themeScript = `
+  (function() {
+    var theme = localStorage.getItem('theme') || 'system';
+    var resolved = theme;
+    if (theme === 'system') {
+      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.classList.add(resolved);
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body
         className={`${poppins.variable} ${sourceSerif.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

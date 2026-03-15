@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-purple-tint bg-background-light">
+    <footer className="border-t border-border bg-background-light">
       <div className="mx-auto max-w-6xl px-6 py-8">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div>
@@ -44,7 +44,7 @@ export default function Footer() {
             </Link>
           </nav>
         </div>
-        <div className="mt-6 border-t border-purple-tint pt-4 text-center">
+        <div className="mt-6 border-t border-border pt-4 text-center">
           <p className="font-serif text-sm text-text-secondary">
             &copy; {new Date().getFullYear()} TK ForgeWorks. Built with stubborn
             persistence.
