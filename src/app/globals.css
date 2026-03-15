@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   /* Brand Colors */
@@ -101,4 +102,68 @@ pre code {
   padding: 0;
   color: inherit;
   font-size: inherit;
+}
+
+/* Prose overrides for markdown content */
+.prose h2 {
+  font-family: var(--font-header);
+  color: var(--purple-primary);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  font-family: var(--font-header);
+  color: var(--purple-secondary);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h4 {
+  font-family: var(--font-header);
+  color: var(--purple-dark);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose ul, .prose ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--purple-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: var(--purple-primary);
+}
+
+.prose blockquote {
+  border-left-color: var(--purple-secondary);
+  color: var(--text-secondary);
+  font-style: italic;
 }
