@@ -1451,105 +1451,249 @@ The current build includes basic combat, crafting menus, and environments that l
 
 ## Content Management Workflow
 
-### Creating New Content
+This section covers how to add and update all content on the site. The site uses a markdown-based content pipeline — you write `.md` files with YAML front matter, and the build system processes them into pages automatically.
 
-#### For Blog Posts
+### Directory Structure
 
-```bash
-# Create a new blog post
-npm run new:post
-
-# Follow the prompts:
-# Post title: Why My Test Suite Has Trust Issues
-# Brief excerpt: A meditation on flaky tests and broken builds
-# Tags: testing, debugging, murphy's-law
-# Status: published
-
-# This creates: content/blog/why-my-test-suite-has-trust-issues.md
-# Edit the file and add your content
-```
-
-#### For Projects
-
-```bash
-# Create a new project
-npm run new:project
-
-# Follow the prompts:
-# Project title: Magic Card Tracker
-# Brief description: Collection management app for MTG cards
-# Status: Active
-# Tech stack: Java, Spring Boot, React
-# Featured project: y
-# GitHub URL: https://github.com/username/mtg-tracker
-
-# This creates: content/projects/magic-card-tracker.md
-# And: public/images/projects/magic-card-tracker/ (for screenshots)
-```
-
-### Image Management
-
-#### Blog Images
+All content lives under the `content/` directory. Images go in `public/images/`.
 
 ```default
-public/images/blog/post-slug/
-├── screenshot-1.jpg
-├── diagram.png
-└── demo.gif
+content/
+├── blog/              # Blog posts (one .md file per post)
+├── projects/          # Project pages (one .md file per project)
+└── pages/             # Static pages (about, faq, etc.)
+
+public/
+└── images/            # All site images
+    ├── blog/          # Blog post images (optional subdirectories)
+    ├── projects/      # Project images (optional subdirectories)
+    └── ...            # General images (profile photos, etc.)
 ```
 
-Reference in markdown:
+---
 
-```markdown
-![Feature Demo](/images/blog/post-slug/demo.gif)
-```
+### Creating a New Blog Post
 
-#### Project Images
+1. Create a new `.md` file in `content/blog/`. Use a URL-friendly slug as the filename (lowercase, hyphens, no spaces):
 
 ```default
-public/images/projects/project-slug/
-├── main-screenshot.jpg
-├── architecture-diagram.png
-└── demo-video-thumbnail.jpg
+content/blog/my-new-post-title.md
 ```
 
-Update front matter:
+2. Add the required front matter at the top of the file:
 
 ```yaml
-images: ["main-screenshot.jpg", "architecture-diagram.png"]
+---
+title: "My New Post Title"
+date: "2025-03-15"
+excerpt: "A short description shown in post listings and SEO metadata"
+tags: ["tag-one", "tag-two"]
+status: "published"
+---
 ```
+
+**Front matter fields:**
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | Yes | Display title of the post |
+| `date` | Yes | Publication date in `YYYY-MM-DD` format |
+| `excerpt` | Yes | Short summary for listings and meta descriptions |
+| `tags` | Yes | Array of tag strings for categorization |
+| `status` | Yes | `"published"` or `"draft"` — drafts are excluded from listings |
+
+3. Write your content in standard markdown below the front matter. The site automatically calculates reading time from word count.
+
+**Important:** You must have at least one published blog post at all times. The static export build will fail if `generateStaticParams` returns an empty list for the blog `[slug]` route.
+
+---
+
+### Creating a New Project Page
+
+1. Create a new `.md` file in `content/projects/`:
+
+```default
+content/projects/my-project-name.md
+```
+
+2. Add the required front matter:
+
+```yaml
+---
+title: "My Project Name"
+status: "Active"
+excerpt: "Short description for project cards and listings"
+tech: ["Technology", "Stack", "Items"]
+featured: true
+heroImage: "/images/projects/my-project-screenshot.jpg"
+heroAlt: "Description of the hero image for accessibility"
+github: "https://github.com/username/repo"
+demo: "https://demo-url.com"
+---
+```
+
+**Front matter fields:**
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | Yes | Project display name |
+| `status` | Yes | One of: `"Active"`, `"Paused"`, `"Completed"`, `"Planning"` |
+| `excerpt` | Yes | Short summary for project cards |
+| `tech` | Yes | Array of technology/tool strings |
+| `featured` | Yes | `true` to show on the home page, `false` to hide |
+| `heroImage` | No | Path to a hero image displayed at top of project page |
+| `heroAlt` | No | Alt text for the hero image (defaults to title if omitted) |
+| `images` | No | Array of additional image filenames |
+| `github` | No | GitHub repository URL |
+| `demo` | No | Live demo URL |
+
+**Status colors:** The status value determines the badge color on project cards:
+- **Active** / **Completed** → green (success)
+- **Paused** → yellow (warning)
+- **Planning** → blue (info)
+
+3. Write your project content in markdown below the front matter. Good sections to include: overview, current status, tech details, challenges, and "what I learned."
+
+---
+
+### Updating Static Pages
+
+Static pages (About, FAQ) live in `content/pages/` and are loaded by their respective page components. To edit them, update the markdown content in the corresponding file:
+
+- **About page:** `content/pages/about.md`
+- **FAQ page:** `content/pages/faq.md`
+
+The Contact page is currently a TSX component (`src/app/contact/page.tsx`) and must be edited directly.
+
+---
+
+### Images
+
+There are three ways to include images on the site. All images are served from `public/images/` and referenced with paths starting at `/images/`.
+
+#### Image File Guidelines
+
+- **Use web-friendly filenames:** lowercase, hyphens instead of spaces, no special characters
+  - Good: `my-project-screenshot.jpg`
+  - Bad: `My Project Screenshot (v2).jpg`
+- **Supported formats:** `.jpg`, `.png`, `.gif`, `.webp`, `.svg`
+- **Optimize before adding:** Compress images to keep page load times fast. Aim for under 200KB per image where possible
+- **Organize by context:** Use subdirectories like `images/blog/`, `images/projects/` to keep things tidy
+
+#### Method 1: Markdown Inline Images (Blog Posts & Project Content)
+
+Use standard markdown image syntax anywhere in your `.md` content:
+
+```markdown
+![Alt text describing the image](/images/my-image.jpg)
+```
+
+This is the simplest approach and works in any markdown file (blog posts, project pages, static pages). The image renders inline with the text content, styled with rounded corners and proper spacing by the site's prose CSS.
+
+**Example in a blog post:**
+
+```markdown
+---
+title: "My Custom Keyboard Build"
+date: "2025-03-15"
+excerpt: "Documenting my split keyboard journey"
+tags: ["hardware", "keyboards"]
+status: "published"
+---
+
+Here's the layout I designed for my Iris keyboard:
+
+![Iris split keyboard layout showing three layers of custom key mappings](/images/iris-keyboard-layout.png)
+
+It took a few iterations to get the layers right, but the muscle memory eventually kicks in.
+```
+
+#### Method 2: Front Matter Hero Image (Project Pages)
+
+Add `heroImage` and `heroAlt` fields to a project's front matter. The project page component renders this as a large image above the title.
+
+```yaml
+---
+title: "My Project"
+status: "Active"
+excerpt: "Project description"
+tech: ["Unity", "C#"]
+featured: true
+heroImage: "/images/projects/my-project-hero.jpg"
+heroAlt: "Screenshot of the project main menu"
+---
+```
+
+The hero image is rendered using the Next.js `<Image>` component with automatic sizing. This is the recommended approach for the primary visual of a project page.
+
+#### Method 3: Next.js Image Component (Page Components)
+
+For images in TSX page components (not markdown), use the Next.js `<Image>` component directly:
+
+```tsx
+import Image from "next/image";
+
+<Image
+  src="/images/profile-photo.jpg"
+  alt="Description of the image"
+  width={800}
+  height={500}
+  className="h-auto w-full rounded-lg object-cover"
+  priority  // Add this for above-the-fold images
+/>
+```
+
+This approach is used on the About page for the profile/workspace photo. It provides more control over sizing, loading priority, and layout than markdown images.
+
+**When to use each method:**
+
+| Method | Best for | Where it works |
+|--------|----------|---------------|
+| Markdown `![]()`| Inline images in written content | Any `.md` file |
+| Front matter `heroImage` | Primary project visuals | Project `.md` files only |
+| Next.js `<Image>` | Images in page components with precise layout control | `.tsx` files only |
+
+---
 
 ### Development Workflow
 
 #### Local Development
 
 ```bash
-# Start development server
+# Start development server with hot reload
 npm run dev
 
 # Open http://localhost:3000
-# Edit markdown files - changes appear immediately
-# Add images to public/images/ directories
+# Edit markdown files — changes appear immediately
+# Add images to public/images/ — available immediately
 ```
 
-#### Content Preview
+#### Testing a Production Build
 
 ```bash
-# Build static site locally
+# Build the static site (same output as deployment)
 npm run build
 
-# Serve built site
-npm run start
-
-# Test exactly what will be deployed
+# The built site goes to the /out directory
 ```
+
+#### Adding Content Checklist
+
+When adding new content, make sure to:
+
+1. **Filename:** Use a URL-friendly slug (lowercase, hyphens, no spaces)
+2. **Front matter:** Include all required fields for the content type
+3. **Images:** Place in `public/images/`, use web-friendly filenames, include descriptive alt text
+4. **Status:** Set blog posts to `"published"` when ready (or `"draft"` to hide from listings)
+5. **Test locally:** Run `npm run dev` and verify the page renders correctly
+6. **Build check:** Run `npm run build` to verify the static export succeeds before pushing
 
 #### Deployment
 
 ```bash
-# Commit changes to Git
-git add .
-git commit -m "Add new blog post about debugging"
+# Commit your changes
+git add content/blog/my-new-post.md public/images/my-image.jpg
+git commit -m "Add new blog post about my new post topic"
 git push origin main
 
 # GitHub Actions automatically:
