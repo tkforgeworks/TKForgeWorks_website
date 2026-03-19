@@ -40,3 +40,6 @@ next-env.d.ts
 public/images/iris-keyboard-layout.png
 public/images/widebody-m2.jpg
 public/images/mkv-supra.jpg
+
+# local ai settings
+/.claude
