@@ -1,0 +1,222 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  /* Brand Colors - Light */
+  --purple-primary: #6b46c1;
+  --purple-secondary: #7c3aed;
+  --purple-dark: #553c9a;
+  --purple-tint: #ede9fe;
+
+  /* Text Colors - Light */
+  --text-primary: #334155;
+  --text-secondary: #64748b;
+
+  /* Background - Light */
+  --background: #ffffff;
+  --background-light: #f8fafc;
+
+  /* Semantic Colors - Light */
+  --error-primary: #dc2626;
+  --error-light: #fef2f2;
+  --error-text: #991b1b;
+  --success-primary: #16a34a;
+  --success-light: #f0fdf4;
+  --success-text: #166534;
+  --warning-primary: #d97706;
+  --warning-light: #fffbeb;
+  --warning-text: #92400e;
+  --info-primary: #0284c7;
+  --info-light: #f0f9ff;
+  --info-text: #0c4a6e;
+
+  /* Border */
+  --border: #e2e8f0;
+
+  /* Fonts */
+  --font-header: "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-code: "JetBrains Mono", Monaco, Menlo, monospace;
+}
+
+.dark {
+  /* Brand Colors - Dark */
+  --purple-primary: #a855f7;
+  --purple-secondary: #8b5cf6;
+  --purple-dark: #c4b5fd;
+  --purple-tint: #312e81;
+
+  /* Text Colors - Dark */
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e1;
+
+  /* Background - Dark */
+  --background: #0f172a;
+  --background-light: #1e293b;
+
+  /* Semantic Colors - Dark */
+  --error-primary: #f87171;
+  --error-light: #450a0a;
+  --error-text: #fca5a5;
+  --success-primary: #4ade80;
+  --success-light: #052e16;
+  --success-text: #86efac;
+  --warning-primary: #fbbf24;
+  --warning-light: #451a03;
+  --warning-text: #fcd34d;
+  --info-primary: #38bdf8;
+  --info-light: #082f49;
+  --info-text: #7dd3fc;
+
+  /* Border */
+  --border: #334155;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-light: var(--background-light);
+  --color-foreground: var(--text-primary);
+
+  --color-purple-primary: var(--purple-primary);
+  --color-purple-secondary: var(--purple-secondary);
+  --color-purple-dark: var(--purple-dark);
+  --color-purple-tint: var(--purple-tint);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+
+  --color-border: var(--border);
+
+  --color-error: var(--error-primary);
+  --color-error-light: var(--error-light);
+  --color-success: var(--success-primary);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning-primary);
+  --color-warning-light: var(--warning-light);
+  --color-info: var(--info-primary);
+  --color-info-light: var(--info-light);
+
+  --font-sans: var(--font-header);
+  --font-serif: var(--font-body);
+  --font-mono: var(--font-code);
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-header);
+  color: var(--purple-primary);
+  line-height: 1.3;
+}
+
+code {
+  font-family: var(--font-code);
+  font-size: 0.9em;
+  font-weight: 500;
+  background: var(--purple-tint);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  color: var(--purple-primary);
+}
+
+pre {
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.dark pre {
+  background: #0f172a;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Prose overrides for markdown content */
+.prose h2 {
+  font-family: var(--font-header);
+  color: var(--purple-primary);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  font-family: var(--font-header);
+  color: var(--purple-secondary);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h4 {
+  font-family: var(--font-header);
+  color: var(--purple-dark);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.prose ul, .prose ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--purple-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: var(--purple-primary);
+}
+
+.prose blockquote {
+  border-left-color: var(--purple-secondary);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.prose img {
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 100%;
+  height: auto;
+}
