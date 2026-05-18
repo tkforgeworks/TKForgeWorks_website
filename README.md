@@ -215,17 +215,20 @@ Images are served from the `public/` directory. Any file in `public/` is availab
 All content changes follow the same Git workflow as code changes:
 
 ```
-main          ← production (live site at tkforgeworks.com)
-  └── staging ← staging environment (preview behind Cloudflare Access)
-        └── feature/add-blog-post-name  ← your working branch
+main ← production (live site at tkforgeworks.com)
+  └── content/add-blog-post-name  ← your working branch
 ```
+
+- **`main`** is the production branch — every merge triggers a Cloudflare Pages deploy
+- **Feature/content branches** are created from `main` and merged back via pull request
+- **Branch protection** requires CI checks (lint, typecheck, build) to pass before merging
 
 ### Step-by-Step: Publishing New Content
 
-1. **Create a branch** from `staging`:
+1. **Create a branch** from `main`:
    ```bash
-   git checkout staging
-   git pull origin staging
+   git checkout main
+   git pull origin main
    git checkout -b content/add-new-blog-post
    ```
 
@@ -253,27 +256,14 @@ main          ← production (live site at tkforgeworks.com)
    git push -u origin content/add-new-blog-post
    ```
 
-6. **Open a Pull Request** into `staging`:
-   - Cloudflare Pages will generate a **preview deployment** with a unique URL
+6. **Open a Pull Request** into `main`:
+   - CI runs automatically — lint, typecheck, and build must all pass
+   - Cloudflare Pages generates a **preview deployment** with a unique URL
    - Use the preview URL to verify the content looks correct
 
-7. **Merge to staging**:
-   - Once the PR is approved/reviewed, merge into `staging`
-   - The staging environment updates automatically
-   - Verify at the staging URL (protected behind Cloudflare Access authentication)
-
-8. **Promote to production**:
-   - When staging looks good, open a PR from `staging` → `main`
-   - Merging to `main` triggers the production deployment to the live site
-
-### Staging Environment
-
-The staging environment provides a way to verify content changes before they go live:
-
-- **Staging branch**: `staging` — deploys automatically to a staging URL on Cloudflare Pages
-- **Access control**: Protected behind Cloudflare Access (requires authentication to view)
-- **Purpose**: Final verification of content, layout, and images before promoting to production
-- **Preview deployments**: Every PR also gets its own unique preview URL from Cloudflare Pages for per-change review
+7. **Merge to production**:
+   - Once CI passes and the preview looks good, merge the PR into `main`
+   - Cloudflare Pages automatically rebuilds and deploys to the live site
 
 ---
 
