@@ -27,5 +27,5 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Build
+      - name: Build (static export)
         run: npm run build
