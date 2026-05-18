@@ -46,7 +46,7 @@ export default function Home() {
             </Link>
             <Link
               href="/about"
-              className="rounded-lg border border-purple-primary px-6 py-3 font-sans text-sm font-medium text-purple-primary no-underline transition-colors hover:bg-purple-tint"
+              className="rounded-lg border border-purple-primary bg-purple-tint px-6 py-3 font-sans text-sm font-medium text-purple-primary no-underline transition-colors hover:bg-purple-tint-hover"
             >
               Read About Me
             </Link>
@@ -143,13 +143,13 @@ export default function Home() {
 function statusClasses(status: string): string {
   switch (status) {
     case "Active":
-      return "bg-success-light text-success";
+      return "bg-success-light text-success-text";
     case "Completed":
-      return "bg-success-light text-success";
+      return "bg-success-light text-success-text";
     case "Paused":
-      return "bg-warning-light text-warning";
+      return "bg-warning-light text-warning-text";
     case "Planning":
-      return "bg-info-light text-info";
+      return "bg-info-light text-info-text";
     default:
       return "bg-purple-tint text-purple-dark";
   }

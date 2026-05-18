@@ -37,11 +37,54 @@
   --font-header: "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: "Source Serif 4", Georgia, serif;
   --font-code: "JetBrains Mono", Monaco, Menlo, monospace;
+
+  /* Type scale */
+  --fs-display: 2.5rem;
+  --fs-h1: 1.875rem;
+  --fs-h2: 1.5rem;
+  --fs-h3: 1.25rem;
+  --fs-h4: 1.1rem;
+  --fs-body-lg: 1.25rem;
+  --fs-body: 1.125rem;
+  --fs-ui: 1rem;
+  --fs-small: 0.9rem;
+  --fs-code: 0.9rem;
+  --fs-code-inl: 0.9em;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Derived tokens */
+  --purple-tint-hover: color-mix(in oklab, var(--purple-tint) 70%, var(--purple-primary) 30%);
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-full: 9999px;
+
+  /* Shadow */
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* Motion */
+  --duration: 200ms;
+  --easing: ease;
+
+  /* Layout caps */
+  --container-prose: 48rem;
+  --container-page: 72rem;
 }
 
 .dark {
   /* Brand Colors - Dark */
-  --purple-primary: #a855f7;
+  --purple-primary: #b794f4;
   --purple-secondary: #8b5cf6;
   --purple-dark: #c4b5fd;
   --purple-tint: #312e81;
@@ -81,6 +124,7 @@
   --color-purple-secondary: var(--purple-secondary);
   --color-purple-dark: var(--purple-dark);
   --color-purple-tint: var(--purple-tint);
+  --color-purple-tint-hover: var(--purple-tint-hover);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -89,12 +133,16 @@
 
   --color-error: var(--error-primary);
   --color-error-light: var(--error-light);
+  --color-error-text: var(--error-text);
   --color-success: var(--success-primary);
   --color-success-light: var(--success-light);
+  --color-success-text: var(--success-text);
   --color-warning: var(--warning-primary);
   --color-warning-light: var(--warning-light);
+  --color-warning-text: var(--warning-text);
   --color-info: var(--info-primary);
   --color-info-light: var(--info-light);
+  --color-info-text: var(--info-text);
 
   --font-sans: var(--font-header);
   --font-serif: var(--font-body);
@@ -106,7 +154,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.7;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--duration) var(--easing), color var(--duration) var(--easing);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -117,21 +165,21 @@ h1, h2, h3, h4, h5, h6 {
 
 code {
   font-family: var(--font-code);
-  font-size: 0.9em;
+  font-size: var(--fs-code-inl);
   font-weight: 500;
   background: var(--purple-tint);
   padding: 0.15rem 0.35rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--purple-primary);
 }
 
 pre {
   font-family: var(--font-code);
-  font-size: 0.9rem;
+  font-size: var(--fs-code);
   background: #1e293b;
   color: #e2e8f0;
-  padding: 1.5rem;
-  border-radius: 8px;
+  padding: var(--space-6);
+  border-radius: var(--radius-md);
   line-height: 1.5;
   overflow-x: auto;
 }
@@ -152,7 +200,7 @@ pre code {
   font-family: var(--font-header);
   color: var(--purple-primary);
   font-weight: 600;
-  font-size: 1.5rem;
+  font-size: var(--fs-h2);
   margin-top: 2.5rem;
   margin-bottom: 1rem;
 }
@@ -161,7 +209,7 @@ pre code {
   font-family: var(--font-header);
   color: var(--purple-secondary);
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
   margin-top: 2rem;
   margin-bottom: 0.75rem;
 }
@@ -170,7 +218,7 @@ pre code {
   font-family: var(--font-header);
   color: var(--purple-dark);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: var(--fs-h4);
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
 }
@@ -214,7 +262,7 @@ pre code {
 }
 
 .prose img {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   max-width: 100%;

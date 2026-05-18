@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -17,15 +19,19 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   return (
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link
-          href="/"
-          className="font-sans text-xl font-bold text-purple-primary no-underline"
-        >
-          TK ForgeWorks
+        <Link href="/" className="no-underline">
+          <Image
+            src={resolvedTheme === "dark" ? "/wordmark-dark.svg" : "/wordmark-light.svg"}
+            alt="TK ForgeWorks"
+            width={180}
+            height={32}
+            priority
+          />
         </Link>
 
         <div className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const socialLinks = [
@@ -56,11 +57,21 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-8">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div>
-            <Link
-              href="/"
-              className="font-sans text-lg font-semibold text-purple-primary no-underline"
-            >
-              TK ForgeWorks
+            <Link href="/" className="no-underline">
+              <Image
+                src="/wordmark-light.svg"
+                alt="TK ForgeWorks"
+                width={150}
+                height={26}
+                className="dark:hidden"
+              />
+              <Image
+                src="/wordmark-dark.svg"
+                alt="TK ForgeWorks"
+                width={150}
+                height={26}
+                className="hidden dark:block"
+              />
             </Link>
             <p className="mt-1 font-serif text-sm text-text-secondary">
               Where problem-solving meets &quot;let&apos;s see what happens if I
