@@ -16,8 +16,15 @@ export default function Home() {
 
   return (
     <div>
+      {/* Hero banner placeholder — swap with real artwork when available */}
+      <div className="flex h-64 w-full items-center justify-center bg-[#cbd5e1] dark:bg-[#334155] md:h-80">
+        <span className="font-sans text-sm font-medium text-text-secondary">
+          Hero banner placeholder
+        </span>
+      </div>
+
       {/* Hero Section */}
-      <section className="bg-background-light py-20">
+      <section className="bg-background-light py-16">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <h1 className="font-sans text-4xl font-bold text-purple-primary md:text-5xl">
             TK ForgeWorks
@@ -30,7 +37,7 @@ export default function Home() {
             Engineering solutions and creative projects through trial, error, and
             stubborn persistence.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/projects"
               className="rounded-lg bg-purple-primary px-6 py-3 font-sans text-sm font-medium text-white no-underline transition-colors hover:bg-purple-dark"

@@ -24,7 +24,7 @@ export default function ContactPage() {
         admittedly isn&apos;t setting the bar very high.
       </p>
 
-      <div className="mt-10 rounded-lg border border-purple-tint bg-background-light p-8">
+      <div className="mt-10 rounded-lg border border-purple-tint bg-background-light p-4 md:p-8">
         <h2 className="font-sans text-xl font-semibold text-purple-primary">
           Get in Touch
         </h2>
