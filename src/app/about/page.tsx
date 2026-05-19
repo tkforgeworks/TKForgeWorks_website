@@ -22,7 +22,7 @@ export default async function AboutPage() {
       </p>
 
       {/* Example: Next.js Image component used directly in a page */}
-      <div className="mt-8 overflow-hidden rounded-lg">
+      {/* <div className="mt-8 overflow-hidden rounded-lg">
         <Image
           src="/images/mkv-supra.jpg"
           alt="Placeholder image — blue MkV Toyota Supra (replace with profile photo)"
@@ -34,7 +34,7 @@ export default async function AboutPage() {
         <p className="mt-2 text-center font-sans text-sm text-text-secondary">
           Placeholder — swap this out for a real profile photo or workspace shot
         </p>
-      </div>
+      </div> */}
 
       {htmlContent ? (
         <article
