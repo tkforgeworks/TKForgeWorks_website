@@ -12,7 +12,7 @@ export default function ProjectsPage() {
   const projects = getAllContent<ProjectFrontmatter>("projects");
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
+    <div className="mx-auto max-w-3xl px-6 py-16">
       <h1 className="font-sans text-3xl font-bold text-purple-primary md:text-4xl">
         Projects
       </h1>
@@ -23,7 +23,7 @@ export default function ProjectsPage() {
       </p>
 
       {projects.length > 0 ? (
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <Link
               key={project.slug}
@@ -34,7 +34,7 @@ export default function ProjectsPage() {
                 {project.frontmatter.title}
               </h2>
               <span
-                className={`mt-2 inline-block rounded-full px-3 py-1 font-sans text-xs font-medium ${statusClasses(project.frontmatter.status)}`}
+                className={`mt-2 inline-block rounded-full px-3 py-1 font-sans text-sm font-medium ${statusClasses(project.frontmatter.status)}`}
               >
                 {project.frontmatter.status}
               </span>

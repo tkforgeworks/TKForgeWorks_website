@@ -3,9 +3,9 @@
 
 :root {
   /* Brand Colors - Light */
-  --purple-primary: #6b46c1;
-  --purple-secondary: #7c3aed;
-  --purple-dark: #553c9a;
+  --purple-primary: #8532d6;
+  --purple-secondary: #9632f3;
+  --purple-dark: #601bbc;
   --purple-tint: #ede9fe;
 
   /* Text Colors - Light */
@@ -84,8 +84,8 @@
 
 .dark {
   /* Brand Colors - Dark */
-  --purple-primary: #b794f4;
-  --purple-secondary: #8b5cf6;
+  --purple-primary: #c495f4;
+  --purple-secondary: #d8b4fe;
   --purple-dark: #c4b5fd;
   --purple-tint: #312e81;
 

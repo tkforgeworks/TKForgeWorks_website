@@ -40,13 +40,13 @@ export default function Home() {
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/projects"
-              className="rounded-lg bg-purple-primary px-6 py-3 font-sans text-sm font-medium text-white no-underline transition-colors hover:bg-purple-dark"
+              className="rounded-lg bg-purple-primary px-6 py-3 font-sans text-base font-medium text-white no-underline transition-colors hover:bg-purple-dark dark:text-background"
             >
               View Projects
             </Link>
             <Link
               href="/about"
-              className="rounded-lg border border-purple-primary bg-purple-tint px-6 py-3 font-sans text-sm font-medium text-purple-primary no-underline transition-colors hover:bg-purple-tint-hover"
+              className="rounded-lg border border-purple-primary bg-purple-tint px-6 py-3 font-sans text-base font-medium text-purple-primary no-underline transition-colors hover:bg-purple-tint-hover"
             >
               Read About Me
             </Link>
@@ -72,7 +72,7 @@ export default function Home() {
                     {project.frontmatter.title}
                   </h3>
                   <span
-                    className={`mt-2 inline-block rounded-full px-3 py-1 font-sans text-xs font-medium ${statusClasses(project.frontmatter.status)}`}
+                    className={`mt-2 inline-block rounded-full px-3 py-1 font-sans text-sm font-medium ${statusClasses(project.frontmatter.status)}`}
                   >
                     {project.frontmatter.status}
                   </span>

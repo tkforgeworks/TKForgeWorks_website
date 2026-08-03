@@ -57,7 +57,14 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-8">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div>
-            <Link href="/" className="no-underline">
+            <Link href="/" className="flex items-center gap-2.5 no-underline">
+              <Image
+                src="/logo-mark.svg"
+                alt=""
+                aria-hidden="true"
+                width={28}
+                height={28}
+              />
               <Image
                 src="/wordmark-light.svg"
                 alt="TK ForgeWorks"
