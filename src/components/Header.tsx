@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
-import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -19,18 +18,36 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { resolvedTheme } = useTheme();
 
   return (
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="no-underline">
+        <Link href="/" className="flex items-center gap-3 no-underline">
           <Image
-            src={resolvedTheme === "dark" ? "/wordmark-dark.svg" : "/wordmark-light.svg"}
+            src="/logo-mark.svg"
+            alt=""
+            aria-hidden="true"
+            width={36}
+            height={36}
+            priority
+          />
+          {/* Theme-swapped via CSS, not JS — a resolvedTheme ternary flashes the
+              wrong wordmark on load because the server snapshot resolves light. */}
+          <Image
+            src="/wordmark-light.svg"
             alt="TK ForgeWorks"
             width={180}
             height={32}
             priority
+            className="dark:hidden"
+          />
+          <Image
+            src="/wordmark-dark.svg"
+            alt="TK ForgeWorks"
+            width={180}
+            height={32}
+            priority
+            className="hidden dark:block"
           />
         </Link>
 

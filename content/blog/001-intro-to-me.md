@@ -6,7 +6,7 @@ tags: ["personal", "introduction"]
 status: "published"
 ---
 
-# Intro to Me
+# Allow me to ~~re~~introduce myself...
 
 Welcome to what's likely to be the most unkempt, chaotic, and highly inconsistent blog you’d ever dare to find on the interweb.  What you’ll find are my rambling thoughts put to paper, all as a way to explore and get away from the meetings-on-meetings lifestyle of regular work.  All this, only to go ahead and make a Jira board for myself to track all the tasks I want to do when I'm not shepherding the Jira board of tasks I don't want to do.
 

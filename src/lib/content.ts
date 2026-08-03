@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import gfm from "remark-gfm";
 import html from "remark-html";
 
 const contentDirectory = path.join(process.cwd(), "content");
@@ -52,8 +53,11 @@ export function getContentBySlug<T>(
   };
 }
 
+// remark alone is CommonMark only, which has no strikethrough, tables, task
+// lists or footnotes. remark-gfm adds them so authored markdown renders the
+// same here as it does in GitHub/editor previews.
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(html).process(markdown);
+  const result = await remark().use(gfm).use(html).process(markdown);
   return result.toString();
 }
 
