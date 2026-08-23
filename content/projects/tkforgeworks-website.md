@@ -3,7 +3,7 @@ title: "This Website"
 status: "Active"
 excerpt: "The site you're currently looking at. Next.js, Tailwind, markdown content, and a full CI/CD pipeline for what is, at heart, a blog."
 tech: ["Next.js", "TypeScript", "Tailwind CSS", "Cloudflare Pages"]
-featured: false
+featured: true
 github: "https://github.com/tkforgeworks/TKForgeWorks_website"
 ---
 

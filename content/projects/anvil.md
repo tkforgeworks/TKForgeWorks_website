@@ -4,6 +4,7 @@ status: "Active"
 excerpt: "Desktop RPG data manager — classes, items, recipes, NPCs, loot tables — because game data deserved better than my seventh spreadsheet tab."
 tech: ["Electron", "React", "TypeScript", "SQLite"]
 featured: false
+github: "https://github.com/tkforgeworks/anvil"
 ---
 
 Anvil is a desktop tool for managing RPG game data: character classes, abilities, items, crafting recipes, NPCs, and loot tables, all stored in portable project files with configurable schemas. It started as "I just need somewhere to put the Aether Gears data" and escalated into a full editor suite with undo/redo, cross-domain validation, bulk operations, and a theming system. Scope creep isn't always a tragedy — sometimes it ships.
