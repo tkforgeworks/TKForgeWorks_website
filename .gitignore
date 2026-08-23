@@ -11,6 +11,9 @@
 # testing
 /coverage
 
+#drafts
+content/projects/drafts
+
 # next.js
 /.next/
 /out/

@@ -22,13 +22,13 @@ They're not unfinished - they're "in various stages of completion." Each one tau
 
 **Do you ever actually finish anything?**
 
-Yes! The modular kitchen organizers are done and actually in use. The MTG tracker MVP works. I just tend to have more ideas than hours in the day, which I'm told is better than the alternative.
+Honestly depends on your definition of "finish" here. A few projects have releases that could be considered finished ([Anvil](/projects/anvil), [COG](/projects/cog)), but they are still under active development as I randomly get new ideas or things I want to add.
 
 ## Technical & Skills
 
 **What's your development setup?**
 
-A mix of VS Code, Unity, and whatever terminal I haven't accidentally closed. I'm a mechanical engineer who learned to code, so my setup is practical rather than aesthetic.
+A mix of VS Code, Godot, and whatever terminal I haven't accidentally closed. I'm a mechanical engineer who learned to code, so my setup is practical rather than aesthetic. I have also branched into Linux as well (pop_OS! for now, looking at some others in the meantime) and do plan to migrate there fully eventually.
 
 **How did you learn game development without formal training?**
 
@@ -46,7 +46,7 @@ Carefully, and not always successfully. I dedicate evenings and weekends to pers
 
 **How do you avoid burnout?**
 
-By accepting that not every evening needs to be productive and that playing games counts as "research" when you're a game developer. Also, switching between different types of projects helps keep things fresh.
+By accepting that not every evening needs to be productive and that playing games counts as "research" when you're a "game developer". Also, switching between different types of projects helps keep things fresh.
 
 ## Business & Collaboration
 

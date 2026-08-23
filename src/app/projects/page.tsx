@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllContent, type ProjectFrontmatter } from "@/lib/content";
+import { statusClasses } from "@/lib/status";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -61,19 +62,4 @@ export default function ProjectsPage() {
       )}
     </div>
   );
-}
-
-function statusClasses(status: string): string {
-  switch (status) {
-    case "Active":
-      return "bg-success-light text-success-text";
-    case "Completed":
-      return "bg-success-light text-success-text";
-    case "Paused":
-      return "bg-warning-light text-warning-text";
-    case "Planning":
-      return "bg-info-light text-info-text";
-    default:
-      return "bg-purple-tint text-purple-dark";
-  }
 }
