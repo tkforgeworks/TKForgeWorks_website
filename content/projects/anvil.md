@@ -3,7 +3,7 @@ title: "Anvil"
 status: "Active"
 excerpt: "Desktop RPG data manager — classes, items, recipes, NPCs, loot tables — because game data deserved better than my seventh spreadsheet tab."
 tech: ["Electron", "React", "TypeScript", "SQLite"]
-featured: false
+featured: true
 github: "https://github.com/tkforgeworks/anvil"
 ---
 
@@ -13,7 +13,7 @@ Anvil is a desktop tool for managing RPG game data: character classes, abilities
 
 - Dedicated editors for every data domain, with validation that catches the "this recipe requires an item that doesn't exist" class of mistake before the game engine does
 - Flexible export: Godot Resource JSON, flat JSON, CSV, or custom templates
-- Persistent SQLite-backed project files, change tracking, soft delete and archiving — the boring reliability features you only appreciate after losing work once
+- Persistent SQLite-backed project files, change tracking, soft delete and archiving; the boring reliability features you only appreciate after losing work once
 
 ## Where it stands
 

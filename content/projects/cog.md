@@ -2,7 +2,7 @@
 title: "COG — Claude Observability GUI"
 status: "Active"
 excerpt: "Desktop app for tracking Claude usage and Cowork sessions — trends, analytics, chat import. Observability for the AI coworker."
-tech: ["Desktop App", "Analytics", "Data Viz"]
+tech: ["Electron", "React", "TypeScript", "SQLite"]
 featured: true
 github: "https://github.com/tkforgeworks/claude-observability-gui"
 ---
