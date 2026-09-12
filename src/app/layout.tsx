@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -66,6 +67,7 @@ export default function RootLayout({
           <Footer />
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId="G-F2FJ799L5V" />
     </html>
   );
 }
