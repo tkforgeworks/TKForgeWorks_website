@@ -345,6 +345,12 @@ def hello():
 └── tsconfig.json
 ```
 
+## License
+
+Apache-2.0 — see [`LICENSE`](LICENSE). Image assets (logos, icons,
+illustrations, screenshots) are **not** covered and are all rights reserved;
+see [`NOTICE`](NOTICE).
+
 ## Design System
 
 ### Colors
