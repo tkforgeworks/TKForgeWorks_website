@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getAllContent, type ProjectFrontmatter, type BlogFrontmatter } from "@/lib/content";
+import JsonLd from "@/components/JsonLd";
+import { websiteJsonLd } from "@/lib/seo";
 
 export default function Home() {
   const projects = getAllContent<ProjectFrontmatter>("projects").filter(
@@ -16,6 +18,8 @@ export default function Home() {
 
   return (
     <div>
+      <JsonLd data={websiteJsonLd()} />
+
       {/* Hero banner placeholder — swap with real artwork when available */}
       <div className="flex h-64 w-full items-center justify-center bg-[#cbd5e1] dark:bg-[#334155] md:h-80">
         <span className="font-sans text-sm font-medium text-text-secondary">
@@ -114,7 +118,10 @@ export default function Home() {
                   href={`/blog/${post.slug}`}
                   className="group rounded-lg border border-purple-tint bg-background p-6 no-underline transition-shadow hover:shadow-md"
                 >
-                  <time className="font-sans text-sm text-text-secondary">
+                  <time
+                    dateTime={post.frontmatter.date}
+                    className="font-sans text-sm text-text-secondary"
+                  >
                     {new Date(post.frontmatter.date).toLocaleDateString(
                       "en-US",
                       { year: "numeric", month: "long", day: "numeric" }

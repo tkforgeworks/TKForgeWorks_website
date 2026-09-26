@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
-import { getContentBySlug, markdownToHtml } from "@/lib/content";
+import {
+  getContentBySlug,
+  markdownToHtml,
+  type PageFrontmatter,
+} from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description:
-    "The questions nobody's asked yet, but probably should.",
-};
+// metaTitle / metaDescription in content/pages/faq.md win over the
+// defaults here, so the search snippet can be tuned without touching code.
+// metaTitle is used verbatim (no "| TK ForgeWorks" suffix).
+export function generateMetadata(): Metadata {
+  const page = getContentBySlug<PageFrontmatter>("pages", "faq");
+  const fm = page?.frontmatter;
+  return {
+    title: fm?.metaTitle ? { absolute: fm.metaTitle } : "FAQ",
+    description:
+      fm?.metaDescription ??
+      fm?.description ??
+      "The questions nobody's asked yet, but probably should.",
+  };
+}
 
 export default async function FAQPage() {
-  const page = getContentBySlug("pages", "faq");
+  const page = getContentBySlug<PageFrontmatter>("pages", "faq");
   const htmlContent = page ? await markdownToHtml(page.content) : null;
 
   return (

@@ -1,5 +1,6 @@
 ---
 title: "Aether Gears"
+metaTitle: "Aether Gears — Action RPG About Corporate Greed, Built in Godot"
 status: "Planning"
 excerpt: "Action RPG about corporate greed and resource exploitation. Seemed like a reasonable first game project right up until I actually started making it."
 tech: ["Godot", "Game Design", "Worldbuilding"]

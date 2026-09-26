@@ -91,16 +91,49 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 |------------|----------|----------|-------------|
 | `title`    | Yes      | string   | Post title, displayed as the page heading |
 | `date`     | Yes      | string   | Publication date in `YYYY-MM-DD` format, used for sorting |
+| `updated`  | No       | string   | Date of the last substantive edit in `YYYY-MM-DD` format. Sets the sitemap `lastmod`, `article:modified_time` and JSON-LD `dateModified` |
 | `excerpt`  | Yes      | string   | Short summary shown on the `/blog` listing page |
 | `tags`     | Yes      | string[] | Array of topic tags displayed as badges |
 | `status`   | Yes      | string   | `"published"` or `"draft"` |
+| `author`   | No       | string   | Byline for this post's link-preview and structured-data metadata. Defaults to `tkforgeworks` (set in `src/lib/site.ts`). Use it if you want a specific post credited to your full name |
 
 ### Blog Behavior
 
-- Posts with `status: "draft"` are **excluded** from the blog listing and homepage — use this to stage content before publishing
+- Posts with `status: "draft"` are **excluded** from the blog listing, homepage and `sitemap.xml`, and are served with a `noindex` robots tag — use this to stage content before publishing
+- The page renders the frontmatter `title` as the only `<h1>`. Start your markdown headings at `##`; any `#` heading in content is automatically demoted to `##` at build time so the page never has two h1s
 - Posts are sorted by `date` descending (newest first) on the listing page
 - The 3 most recent published posts appear on the homepage
 - Reading time is calculated automatically (~200 words per minute)
+- Each published post emits Open Graph `article` tags and BlogPosting JSON-LD built from its frontmatter, so link previews and search results need no extra fields
+- Published posts are also listed, full content included, in the RSS feed at `/feed.xml` (generated at build time by `src/app/feed.xml/route.ts`)
+
+### Social Sharing Image
+
+Every page uses `public/og-default.png` as its link-preview image (the picture Discord, Reddit, LinkedIn, Slack and X show when someone pastes a link). The source is `scripts/og/og-default.svg`.
+
+**To update it:**
+
+1. Edit `scripts/og/og-default.svg` (text, colours and layout are plain SVG; the logo is embedded as a data URI).
+2. Make sure Poppins is available to fontconfig, otherwise the text renders in a fallback font. Poppins is not usually installed system-wide; the simplest route is to download `Poppins-Bold.ttf` and `Poppins-Medium.ttf` from the [google/fonts repo](https://github.com/google/fonts/tree/main/ofl/poppins) and point fontconfig at them with a temporary config:
+   ```bash
+   mkdir -p /tmp/og-fonts && cp Poppins-*.ttf /tmp/og-fonts/
+   printf '<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "fonts.dtd"><fontconfig><dir>/tmp/og-fonts</dir><include ignore_missing="yes">/etc/fonts/fonts.conf</include></fontconfig>' > /tmp/og-fonts/fonts.conf
+   ```
+3. Render the PNG:
+   ```bash
+   FONTCONFIG_FILE=/tmp/og-fonts/fonts.conf rsvg-convert -w 1200 -h 630 scripts/og/og-default.svg -o public/og-default.png
+   ```
+4. Open the PNG and check it before committing. Both files go in the same commit so the source and output stay in sync.
+
+**Constraints when replacing it (whether rendered from the SVG or made elsewhere):**
+
+- **Keep the filename and path** `public/og-default.png`. The layout, `src/lib/site.ts` and the JSON-LD all reference it, and the width/height declared in the tags must match the file.
+- **Dimensions must stay 1200×630** (1.91:1). This is the size every major platform crops to; other ratios get letterboxed or cropped unpredictably.
+- **Format**: PNG or JPG. WebP and SVG are not reliably supported by link-preview scrapers.
+- **Size**: keep it under roughly 300 KB. Some scrapers time out or skip large images; the current file is about 80 KB.
+- **Safe area**: keep important text and the logo at least 60 px from every edge. Some platforms crop the edges for small-card layouts.
+- **Contrast**: previews are often shown at 500 px wide or narrower, so text under about 28 px in the source becomes unreadable.
+- **Caches**: platforms cache the image per URL, sometimes for weeks. After deploying a new version, force a re-scrape with the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) and [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/). Discord and Slack refresh on their own within a day or so.
 
 ---
 
@@ -133,6 +166,7 @@ Include whatever context, technical details, or narrative you want.
 | Field       | Required | Type     | Description |
 |-------------|----------|----------|-------------|
 | `title`     | Yes      | string   | Project name |
+| `metaTitle` | No       | string   | Search-facing `<title>` (still gets the `| TK ForgeWorks` suffix). Set this when the project name alone says nothing about what it is, e.g. `"Anvil — Desktop RPG Game Data Manager"`. Cards and the page heading keep using `title` |
 | `status`    | Yes      | string   | One of: `"Active"`, `"Paused"`, `"Completed"`, `"Planning"` |
 | `excerpt`   | Yes      | string   | Short description for the listing page |
 | `tech`      | Yes      | string[] | Technologies used, displayed as badges |
@@ -171,8 +205,8 @@ The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.ts
 | `slug`            | Yes      | string  | URL path segment |
 | `description`     | Yes      | string  | Short page description |
 | `lastUpdated`     | No       | string  | Date in `YYYY-MM-DD` format |
-| `metaTitle`       | No       | string  | SEO title (falls back to `title`) |
-| `metaDescription` | No       | string  | SEO description (falls back to `description`) |
+| `metaTitle`       | No       | string  | `<title>` used verbatim, with no `| TK ForgeWorks` suffix (falls back to the page name with the suffix) |
+| `metaDescription` | No       | string  | Meta description for search results and link previews (falls back to `description`) |
 
 ---
 
@@ -336,9 +370,17 @@ def hello():
 │   │   ├── blog/             # Blog listing + [slug] detail
 │   │   ├── contact/page.tsx  # Contact (hardcoded JSX)
 │   │   ├── faq/page.tsx      # FAQ (reads content/pages/faq.md)
-│   │   └── projects/         # Projects listing + [slug] detail
-│   ├── components/           # Header, Footer, ThemeToggle, ThemeProvider
-│   └── lib/content.ts        # Content loading, markdown parsing, utilities
+│   │   ├── projects/         # Projects listing + [slug] detail
+│   │   ├── not-found.tsx     # Custom 404 (exported as out/404.html)
+│   │   ├── feed.xml/route.ts # RSS feed of published posts
+│   │   ├── sitemap.ts        # sitemap.xml, built from content/
+│   │   └── robots.ts         # robots.txt
+│   ├── components/           # Header, Footer, ThemeToggle, ThemeProvider, JsonLd
+│   └── lib/
+│       ├── content.ts        # Content loading, markdown parsing, utilities
+│       ├── site.ts           # Site URL, name, author and social profile constants
+│       └── seo.ts            # Open Graph and JSON-LD helpers
+├── scripts/og/               # Source SVG for the social sharing image
 ├── zz-project-documentation/ # Internal design docs, drafts, style guide
 ├── next.config.mjs           # Static export config
 ├── package.json

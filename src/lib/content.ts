@@ -4,11 +4,16 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import gfm from "remark-gfm";
 import html from "remark-html";
+import type { Root } from "mdast";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
 export interface ProjectFrontmatter {
   title: string;
+  /** Search-facing <title> (still gets the "| TK ForgeWorks" suffix). Use it
+   *  when the display title alone says nothing about what the project is,
+   *  e.g. "Anvil". Cards and the page heading keep using title. */
+  metaTitle?: string;
   status: "Active" | "Paused" | "Completed" | "Planning";
   excerpt: string;
   tech: string[];
@@ -23,9 +28,24 @@ export interface ProjectFrontmatter {
 export interface BlogFrontmatter {
   title: string;
   date: string;
+  /** Optional YYYY-MM-DD of the last substantive edit. Feeds the sitemap
+   *  lastmod, article:modified_time and JSON-LD dateModified. */
+  updated?: string;
   excerpt: string;
   tags: string[];
   status: "published" | "draft";
+  /** Optional byline override for this post's article metadata and JSON-LD.
+   *  Defaults to SITE_AUTHOR in src/lib/site.ts. */
+  author?: string;
+}
+
+export interface PageFrontmatter {
+  title: string;
+  description?: string;
+  /** Overrides the <title> completely (no "| TK ForgeWorks" suffix). */
+  metaTitle?: string;
+  /** Overrides the meta description shown in search results. */
+  metaDescription?: string;
 }
 
 export function getContentSlugs(type: "projects" | "blog"): string[] {
@@ -53,11 +73,27 @@ export function getContentBySlug<T>(
   };
 }
 
+// Every page already renders its frontmatter title as the <h1>, so a "# "
+// heading in markdown produces a second h1 and muddles the page outline for
+// search engines. Rather than fail the build, demote any h1 in content to h2
+// (and shift nothing else) so the page keeps exactly one h1.
+function demoteTopLevelHeadings() {
+  return (tree: Root) => {
+    for (const node of tree.children) {
+      if (node.type === "heading" && node.depth === 1) node.depth = 2;
+    }
+  };
+}
+
 // remark alone is CommonMark only, which has no strikethrough, tables, task
 // lists or footnotes. remark-gfm adds them so authored markdown renders the
 // same here as it does in GitHub/editor previews.
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(gfm).use(html).process(markdown);
+  const result = await remark()
+    .use(gfm)
+    .use(demoteTopLevelHeadings)
+    .use(html)
+    .process(markdown);
   return result.toString();
 }
 

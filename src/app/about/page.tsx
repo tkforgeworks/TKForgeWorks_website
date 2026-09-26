@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { getContentBySlug, markdownToHtml } from "@/lib/content";
+import {
+  getContentBySlug,
+  markdownToHtml,
+  type PageFrontmatter,
+} from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Problem-solving meets 'let's see what happens if I try this' - the story behind TK ForgeWorks.",
-};
+// metaTitle / metaDescription in content/pages/about.md win over the
+// defaults here, so the search snippet can be tuned without touching code.
+// metaTitle is used verbatim (no "| TK ForgeWorks" suffix).
+export function generateMetadata(): Metadata {
+  const page = getContentBySlug<PageFrontmatter>("pages", "about");
+  const fm = page?.frontmatter;
+  return {
+    title: fm?.metaTitle ? { absolute: fm.metaTitle } : "About",
+    description:
+      fm?.metaDescription ??
+      fm?.description ??
+      "Problem-solving meets 'let's see what happens if I try this' - the story behind TK ForgeWorks.",
+  };
+}
 
 export default async function AboutPage() {
-  const page = getContentBySlug("pages", "about");
+  const page = getContentBySlug<PageFrontmatter>("pages", "about");
   const htmlContent = page ? await markdownToHtml(page.content) : null;
 
   return (

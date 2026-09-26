@@ -25,7 +25,7 @@ export async function generateMetadata({
   const data = getContentBySlug<ProjectFrontmatter>("projects", slug);
   if (!data) return { title: "Project Not Found" };
   return {
-    title: data.frontmatter.title,
+    title: data.frontmatter.metaTitle ?? data.frontmatter.title,
     description: data.frontmatter.excerpt,
   };
 }

@@ -4,6 +4,12 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_OG_IMAGE,
+} from "@/lib/site";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -28,12 +34,41 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "TK ForgeWorks - Engineering Solutions & Creative Projects",
-    template: "%s | TK ForgeWorks",
+  // Absolute base for every relative URL in metadata. The "./" canonical
+  // resolves per page against the current pathname, so each route declares
+  // itself (with trailing slash) as the canonical URL. This is what
+  // collapses www/apex and any query-string variants down to one indexed
+  // copy of each page.
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "./",
+    types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
   },
-  description:
-    "Mechanical engineer turned creative problem solver. Building games, tools, and solutions through trial, error, and stubborn persistence.",
+  title: {
+    default: `${SITE_NAME} - Engineering Solutions & Creative Projects`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  // Site-wide social card. Next replaces the whole openGraph object when a
+  // page defines its own, so pages that need article fields build theirs
+  // with openGraphFor() in src/lib/seo.ts to keep siteName and the image.
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "./",
+    images: [
+      {
+        url: SITE_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} logo and tagline`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 // Inline script to set theme before first paint, preventing flash
