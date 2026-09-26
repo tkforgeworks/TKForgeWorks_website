@@ -105,6 +105,7 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 - The 3 most recent published posts appear on the homepage
 - Reading time is calculated automatically (~200 words per minute)
 - Each published post emits Open Graph `article` tags and BlogPosting JSON-LD built from its frontmatter, so link previews and search results need no extra fields
+- Published posts are also listed, full content included, in the RSS feed at `/feed.xml` (generated at build time by `src/app/feed.xml/route.ts`)
 
 ### Social Sharing Image
 
@@ -165,6 +166,7 @@ Include whatever context, technical details, or narrative you want.
 | Field       | Required | Type     | Description |
 |-------------|----------|----------|-------------|
 | `title`     | Yes      | string   | Project name |
+| `metaTitle` | No       | string   | Search-facing `<title>` (still gets the `| TK ForgeWorks` suffix). Set this when the project name alone says nothing about what it is, e.g. `"Anvil — Desktop RPG Game Data Manager"`. Cards and the page heading keep using `title` |
 | `status`    | Yes      | string   | One of: `"Active"`, `"Paused"`, `"Completed"`, `"Planning"` |
 | `excerpt`   | Yes      | string   | Short description for the listing page |
 | `tech`      | Yes      | string[] | Technologies used, displayed as badges |
@@ -368,9 +370,17 @@ def hello():
 │   │   ├── blog/             # Blog listing + [slug] detail
 │   │   ├── contact/page.tsx  # Contact (hardcoded JSX)
 │   │   ├── faq/page.tsx      # FAQ (reads content/pages/faq.md)
-│   │   └── projects/         # Projects listing + [slug] detail
-│   ├── components/           # Header, Footer, ThemeToggle, ThemeProvider
-│   └── lib/content.ts        # Content loading, markdown parsing, utilities
+│   │   ├── projects/         # Projects listing + [slug] detail
+│   │   ├── not-found.tsx     # Custom 404 (exported as out/404.html)
+│   │   ├── feed.xml/route.ts # RSS feed of published posts
+│   │   ├── sitemap.ts        # sitemap.xml, built from content/
+│   │   └── robots.ts         # robots.txt
+│   ├── components/           # Header, Footer, ThemeToggle, ThemeProvider, JsonLd
+│   └── lib/
+│       ├── content.ts        # Content loading, markdown parsing, utilities
+│       ├── site.ts           # Site URL, name, author and social profile constants
+│       └── seo.ts            # Open Graph and JSON-LD helpers
+├── scripts/og/               # Source SVG for the social sharing image
 ├── zz-project-documentation/ # Internal design docs, drafts, style guide
 ├── next.config.mjs           # Static export config
 ├── package.json

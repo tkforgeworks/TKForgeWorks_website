@@ -40,7 +40,10 @@ export const metadata: Metadata = {
   // collapses www/apex and any query-string variants down to one indexed
   // copy of each page.
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: "./" },
+  alternates: {
+    canonical: "./",
+    types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
+  },
   title: {
     default: `${SITE_NAME} - Engineering Solutions & Creative Projects`,
     template: `%s | ${SITE_NAME}`,

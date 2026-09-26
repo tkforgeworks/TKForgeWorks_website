@@ -41,6 +41,15 @@ const socialLinks = [
     ),
   },
   {
+    label: "RSS feed",
+    href: "/feed.xml",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M4 4a16 16 0 0 1 16 16h-3A13 13 0 0 0 4 7V4zm0 6a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7v-3zm0 7.5A2.5 2.5 0 1 1 4 22.5 2.5 2.5 0 0 1 4 17.5z" />
+      </svg>
+    ),
+  },
+  {
     label: "Itch.io",
     href: "https://tkforgeworks.itch.io",
     icon: (
@@ -89,8 +98,9 @@ export default function Footer() {
                 <a
                   key={social.label}
                   href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...(social.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
                   className="text-text-secondary transition-colors hover:text-purple-primary"
                   aria-label={social.label}
                 >
