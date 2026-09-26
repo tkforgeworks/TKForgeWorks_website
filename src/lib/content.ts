@@ -48,7 +48,20 @@ export interface PageFrontmatter {
   metaDescription?: string;
 }
 
-export function getContentSlugs(type: "projects" | "blog"): string[] {
+// Per-app privacy policies (Google Play and the apps' About screens link to
+// /privacy/<app-slug>/). Plain, dated policy text, not marketing copy.
+export interface PrivacyFrontmatter {
+  title: string;
+  /** Product name as it appears in the store listing. */
+  app: string;
+  description: string;
+  /** YYYY-MM-DD the policy last changed; shown on the page. */
+  lastUpdated: string;
+}
+
+export function getContentSlugs(
+  type: "projects" | "blog" | "privacy"
+): string[] {
   const dir = path.join(contentDirectory, type);
   if (!fs.existsSync(dir)) return [];
   return fs
@@ -58,7 +71,7 @@ export function getContentSlugs(type: "projects" | "blog"): string[] {
 }
 
 export function getContentBySlug<T>(
-  type: "projects" | "blog" | "pages",
+  type: "projects" | "blog" | "pages" | "privacy",
   slug: string
 ): { frontmatter: T; content: string } | null {
   const fullPath = path.join(contentDirectory, type, `${slug}.md`);

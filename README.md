@@ -210,6 +210,19 @@ The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.ts
 
 ---
 
+## App Privacy Policies
+
+Per-app privacy policies live in `content/privacy/` and render at `/privacy/<filename>/` (e.g. `content/privacy/cheesy-scribe.md` → `/privacy/cheesy-scribe/`). App stores and the apps' About screens link to these URLs, so **never rename a file once an app ships with its link**. They are included in the sitemap automatically.
+
+| Field         | Required | Type   | Description |
+|---------------|----------|--------|-------------|
+| `title`       | Yes      | string | Page heading and `<title>` |
+| `app`         | Yes      | string | Product name as it appears in the store listing |
+| `description` | Yes      | string | Meta description |
+| `lastUpdated` | Yes      | string | `YYYY-MM-DD`, shown under the heading; bump it on every substantive change |
+
+---
+
 ## Working with Images
 
 Images are served from the `public/` directory. Any file in `public/` is available at the site root.

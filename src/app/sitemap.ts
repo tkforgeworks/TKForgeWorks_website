@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import {
   getAllContent,
+  getContentSlugs,
   type BlogFrontmatter,
   type ProjectFrontmatter,
 } from "@/lib/content";
@@ -41,5 +42,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }));
 
-  return [...staticPages, ...projects, ...posts];
+  const privacy: MetadataRoute.Sitemap = getContentSlugs("privacy").map(
+    (slug) => ({
+      url: `${SITE_URL}/privacy/${slug}/`,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    })
+  );
+
+  return [...staticPages, ...projects, ...posts, ...privacy];
 }
