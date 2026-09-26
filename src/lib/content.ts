@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import gfm from "remark-gfm";
 import html from "remark-html";
+import type { Root } from "mdast";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
@@ -53,11 +54,27 @@ export function getContentBySlug<T>(
   };
 }
 
+// Every page already renders its frontmatter title as the <h1>, so a "# "
+// heading in markdown produces a second h1 and muddles the page outline for
+// search engines. Rather than fail the build, demote any h1 in content to h2
+// (and shift nothing else) so the page keeps exactly one h1.
+function demoteTopLevelHeadings() {
+  return (tree: Root) => {
+    for (const node of tree.children) {
+      if (node.type === "heading" && node.depth === 1) node.depth = 2;
+    }
+  };
+}
+
 // remark alone is CommonMark only, which has no strikethrough, tables, task
 // lists or footnotes. remark-gfm adds them so authored markdown renders the
 // same here as it does in GitHub/editor previews.
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(gfm).use(html).process(markdown);
+  const result = await remark()
+    .use(gfm)
+    .use(demoteTopLevelHeadings)
+    .use(html)
+    .process(markdown);
   return result.toString();
 }
 

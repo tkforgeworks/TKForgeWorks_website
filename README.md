@@ -97,7 +97,8 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 
 ### Blog Behavior
 
-- Posts with `status: "draft"` are **excluded** from the blog listing and homepage — use this to stage content before publishing
+- Posts with `status: "draft"` are **excluded** from the blog listing, homepage and `sitemap.xml`, and are served with a `noindex` robots tag — use this to stage content before publishing
+- The page renders the frontmatter `title` as the only `<h1>`. Start your markdown headings at `##`; any `#` heading in content is automatically demoted to `##` at build time so the page never has two h1s
 - Posts are sorted by `date` descending (newest first) on the listing page
 - The 3 most recent published posts appear on the homepage
 - Reading time is calculated automatically (~200 words per minute)

@@ -26,6 +26,13 @@ export async function generateMetadata({
   return {
     title: data.frontmatter.title,
     description: data.frontmatter.excerpt,
+    // Drafts are still built so they can be previewed by URL, but they are
+    // hidden from listings and the sitemap, and must not be indexed if a
+    // crawler stumbles onto one.
+    robots:
+      data.frontmatter.status === "draft"
+        ? { index: false, follow: false }
+        : undefined,
   };
 }
 
