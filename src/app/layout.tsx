@@ -4,6 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -28,6 +29,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  // Absolute base for every relative URL in metadata. The "./" canonical
+  // resolves per page against the current pathname, so each route declares
+  // itself (with trailing slash) as the canonical URL. This is what
+  // collapses www/apex and any query-string variants down to one indexed
+  // copy of each page.
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "./" },
   title: {
     default: "TK ForgeWorks - Engineering Solutions & Creative Projects",
     template: "%s | TK ForgeWorks",
