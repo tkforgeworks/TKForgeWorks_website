@@ -95,6 +95,7 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 | `excerpt`  | Yes      | string   | Short summary shown on the `/blog` listing page |
 | `tags`     | Yes      | string[] | Array of topic tags displayed as badges |
 | `status`   | Yes      | string   | `"published"` or `"draft"` |
+| `author`   | No       | string   | Byline for this post's link-preview and structured-data metadata. Defaults to `tkforgeworks` (set in `src/lib/site.ts`). Use it if you want a specific post credited to your full name |
 
 ### Blog Behavior
 
@@ -107,13 +108,31 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 
 ### Social Sharing Image
 
-Every page uses `public/og-default.png` (1200×630) as its link-preview image. The source is `scripts/og/og-default.svg`; regenerate the PNG after editing it with:
+Every page uses `public/og-default.png` as its link-preview image (the picture Discord, Reddit, LinkedIn, Slack and X show when someone pastes a link). The source is `scripts/og/og-default.svg`.
 
-```bash
-rsvg-convert -w 1200 -h 630 scripts/og/og-default.svg -o public/og-default.png
-```
+**To update it:**
 
-Poppins must be available to fontconfig for the text to match the site's headings.
+1. Edit `scripts/og/og-default.svg` (text, colours and layout are plain SVG; the logo is embedded as a data URI).
+2. Make sure Poppins is available to fontconfig, otherwise the text renders in a fallback font. Poppins is not usually installed system-wide; the simplest route is to download `Poppins-Bold.ttf` and `Poppins-Medium.ttf` from the [google/fonts repo](https://github.com/google/fonts/tree/main/ofl/poppins) and point fontconfig at them with a temporary config:
+   ```bash
+   mkdir -p /tmp/og-fonts && cp Poppins-*.ttf /tmp/og-fonts/
+   printf '<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "fonts.dtd"><fontconfig><dir>/tmp/og-fonts</dir><include ignore_missing="yes">/etc/fonts/fonts.conf</include></fontconfig>' > /tmp/og-fonts/fonts.conf
+   ```
+3. Render the PNG:
+   ```bash
+   FONTCONFIG_FILE=/tmp/og-fonts/fonts.conf rsvg-convert -w 1200 -h 630 scripts/og/og-default.svg -o public/og-default.png
+   ```
+4. Open the PNG and check it before committing. Both files go in the same commit so the source and output stay in sync.
+
+**Constraints when replacing it (whether rendered from the SVG or made elsewhere):**
+
+- **Keep the filename and path** `public/og-default.png`. The layout, `src/lib/site.ts` and the JSON-LD all reference it, and the width/height declared in the tags must match the file.
+- **Dimensions must stay 1200×630** (1.91:1). This is the size every major platform crops to; other ratios get letterboxed or cropped unpredictably.
+- **Format**: PNG or JPG. WebP and SVG are not reliably supported by link-preview scrapers.
+- **Size**: keep it under roughly 300 KB. Some scrapers time out or skip large images; the current file is about 80 KB.
+- **Safe area**: keep important text and the logo at least 60 px from every edge. Some platforms crop the edges for small-card layouts.
+- **Contrast**: previews are often shown at 500 px wide or narrower, so text under about 28 px in the source becomes unreadable.
+- **Caches**: platforms cache the image per URL, sometimes for weeks. After deploying a new version, force a re-scrape with the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) and [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/). Discord and Slack refresh on their own within a day or so.
 
 ---
 

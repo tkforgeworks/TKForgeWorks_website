@@ -26,7 +26,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const data = getContentBySlug<BlogFrontmatter>("blog", slug);
   if (!data) return { title: "Post Not Found" };
-  const { title, excerpt, date, updated, tags, status } = data.frontmatter;
+  const { title, excerpt, date, updated, tags, status, author } =
+    data.frontmatter;
   return {
     title,
     description: excerpt,
@@ -35,7 +36,7 @@ export async function generateMetadata({
       url: `/blog/${slug}/`,
       publishedTime: date,
       modifiedTime: updated ?? date,
-      authors: [SITE_AUTHOR],
+      authors: [author ?? SITE_AUTHOR],
       tags,
     }),
     // Drafts are still built so they can be previewed by URL, but they are

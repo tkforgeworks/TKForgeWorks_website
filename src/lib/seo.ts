@@ -62,8 +62,15 @@ export function blogPostingJsonLd(post: {
   date: string;
   updated?: string;
   tags: string[];
+  author?: string;
 }) {
   const url = `${SITE_URL}/blog/${post.slug}/`;
+  // The site-level Person node carries the sameAs profile links, so refer to
+  // it unless this post names a different author.
+  const author =
+    post.author && post.author !== SITE_AUTHOR
+      ? { "@type": "Person", name: post.author }
+      : { "@id": personId };
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -74,7 +81,7 @@ export function blogPostingJsonLd(post: {
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
     keywords: post.tags,
-    author: { "@id": personId },
+    author,
     publisher: { "@id": personId },
     image: `${SITE_URL}${SITE_OG_IMAGE}`,
     isPartOf: { "@id": websiteId },

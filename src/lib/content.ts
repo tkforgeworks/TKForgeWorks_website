@@ -30,6 +30,9 @@ export interface BlogFrontmatter {
   excerpt: string;
   tags: string[];
   status: "published" | "draft";
+  /** Optional byline override for this post's article metadata and JSON-LD.
+   *  Defaults to SITE_AUTHOR in src/lib/site.ts. */
+  author?: string;
 }
 
 export interface PageFrontmatter {

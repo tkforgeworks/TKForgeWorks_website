@@ -8,9 +8,9 @@ export const SITE_NAME = "TK ForgeWorks";
 export const SITE_DESCRIPTION =
   "Mechanical engineer turned creative problem solver. Building games, tools, and solutions through trial, error, and stubborn persistence.";
 
-// Public author identity used in structured data and article metadata.
-// Keep this to what the site itself already shows about you.
-export const SITE_AUTHOR = "Tim";
+// Default author for article metadata and structured data. A post can
+// override it with an "author" field in its frontmatter.
+export const SITE_AUTHOR = "tkforgeworks";
 
 // Default social card, 1200x630. Source SVG lives in scripts/og/.
 export const SITE_OG_IMAGE = "/og-default.png";
