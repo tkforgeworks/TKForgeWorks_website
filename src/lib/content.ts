@@ -10,6 +10,10 @@ const contentDirectory = path.join(process.cwd(), "content");
 
 export interface ProjectFrontmatter {
   title: string;
+  /** Search-facing <title> (still gets the "| TK ForgeWorks" suffix). Use it
+   *  when the display title alone says nothing about what the project is,
+   *  e.g. "Anvil". Cards and the page heading keep using title. */
+  metaTitle?: string;
   status: "Active" | "Paused" | "Completed" | "Planning";
   excerpt: string;
   tech: string[];

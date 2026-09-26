@@ -1,5 +1,6 @@
 ---
 title: "Anvil"
+metaTitle: "Anvil — Desktop RPG Game Data Manager"
 status: "Active"
 excerpt: "Desktop RPG data manager — classes, items, recipes, NPCs, loot tables — because game data deserved better than my seventh spreadsheet tab."
 tech: ["Electron", "React", "TypeScript", "SQLite"]
