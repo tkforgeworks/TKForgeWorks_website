@@ -91,6 +91,7 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 |------------|----------|----------|-------------|
 | `title`    | Yes      | string   | Post title, displayed as the page heading |
 | `date`     | Yes      | string   | Publication date in `YYYY-MM-DD` format, used for sorting |
+| `updated`  | No       | string   | Date of the last substantive edit in `YYYY-MM-DD` format. Sets the sitemap `lastmod`, `article:modified_time` and JSON-LD `dateModified` |
 | `excerpt`  | Yes      | string   | Short summary shown on the `/blog` listing page |
 | `tags`     | Yes      | string[] | Array of topic tags displayed as badges |
 | `status`   | Yes      | string   | `"published"` or `"draft"` |
@@ -102,6 +103,17 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 - Posts are sorted by `date` descending (newest first) on the listing page
 - The 3 most recent published posts appear on the homepage
 - Reading time is calculated automatically (~200 words per minute)
+- Each published post emits Open Graph `article` tags and BlogPosting JSON-LD built from its frontmatter, so link previews and search results need no extra fields
+
+### Social Sharing Image
+
+Every page uses `public/og-default.png` (1200×630) as its link-preview image. The source is `scripts/og/og-default.svg`; regenerate the PNG after editing it with:
+
+```bash
+rsvg-convert -w 1200 -h 630 scripts/og/og-default.svg -o public/og-default.png
+```
+
+Poppins must be available to fontconfig for the text to match the site's headings.
 
 ---
 
@@ -172,8 +184,8 @@ The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.ts
 | `slug`            | Yes      | string  | URL path segment |
 | `description`     | Yes      | string  | Short page description |
 | `lastUpdated`     | No       | string  | Date in `YYYY-MM-DD` format |
-| `metaTitle`       | No       | string  | SEO title (falls back to `title`) |
-| `metaDescription` | No       | string  | SEO description (falls back to `description`) |
+| `metaTitle`       | No       | string  | `<title>` used verbatim, with no `| TK ForgeWorks` suffix (falls back to the page name with the suffix) |
+| `metaDescription` | No       | string  | Meta description for search results and link previews (falls back to `description`) |
 
 ---
 

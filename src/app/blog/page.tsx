@@ -41,7 +41,7 @@ export default function BlogPage() {
               className="group border-b border-purple-tint pb-8 no-underline last:border-0"
             >
               <div className="flex items-center gap-3 font-sans text-sm text-text-secondary">
-                <time>
+                <time dateTime={post.frontmatter.date}>
                   {new Date(post.frontmatter.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",

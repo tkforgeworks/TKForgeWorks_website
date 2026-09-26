@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((p) => p.frontmatter.status === "published")
     .map((p) => ({
       url: `${SITE_URL}/blog/${p.slug}/`,
-      lastModified: new Date(p.frontmatter.date),
+      lastModified: new Date(p.frontmatter.updated ?? p.frontmatter.date),
       changeFrequency: "yearly",
       priority: 0.6,
     }));

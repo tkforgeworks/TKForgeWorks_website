@@ -24,9 +24,21 @@ export interface ProjectFrontmatter {
 export interface BlogFrontmatter {
   title: string;
   date: string;
+  /** Optional YYYY-MM-DD of the last substantive edit. Feeds the sitemap
+   *  lastmod, article:modified_time and JSON-LD dateModified. */
+  updated?: string;
   excerpt: string;
   tags: string[];
   status: "published" | "draft";
+}
+
+export interface PageFrontmatter {
+  title: string;
+  description?: string;
+  /** Overrides the <title> completely (no "| TK ForgeWorks" suffix). */
+  metaTitle?: string;
+  /** Overrides the meta description shown in search results. */
+  metaDescription?: string;
 }
 
 export function getContentSlugs(type: "projects" | "blog"): string[] {
