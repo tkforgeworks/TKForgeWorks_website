@@ -1,5 +1,5 @@
 ---
-title: "The Next episode/update"
+title: "The Next Episode"
 date: "2026-09-27"
 excerpt: "Still alive, still no schedule; but we got plans, oh so many plans!"
 tags: ["personal", "update"]
