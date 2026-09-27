@@ -255,6 +255,17 @@ pre code {
   color: var(--purple-primary);
 }
 
+/* New-tab marker. The text after the slash is what screen readers announce
+   instead of the arrow; browsers without that syntax use the plain rule. */
+.prose a[target="_blank"]::after {
+  content: "\2197";
+  content: "\2197" / " (opens in new tab)";
+  margin-left: 0.15em;
+  font-size: 0.8em;
+  text-decoration: none;
+  display: inline-block;
+}
+
 .prose blockquote {
   border-left-color: var(--purple-secondary);
   color: var(--text-secondary);

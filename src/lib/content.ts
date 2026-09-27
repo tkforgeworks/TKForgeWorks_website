@@ -4,7 +4,8 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import gfm from "remark-gfm";
 import html from "remark-html";
-import type { Root } from "mdast";
+import { defaultSchema } from "hast-util-sanitize";
+import type { Nodes, Root } from "mdast";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
@@ -85,14 +86,50 @@ function demoteTopLevelHeadings() {
   };
 }
 
+// Blog posts open every link in a new tab so following one never pulls the
+// reader out of the post. Same-page "#" anchors (footnotes, section jumps)
+// are left alone. The arrow marker is added in CSS off a[target="_blank"].
+function openLinksInNewTab() {
+  const walk = (node: Nodes) => {
+    if (
+      (node.type === "link" && !node.url.startsWith("#")) ||
+      node.type === "linkReference"
+    ) {
+      node.data = {
+        ...node.data,
+        hProperties: {
+          ...node.data?.hProperties,
+          target: "_blank",
+          rel: ["noopener", "noreferrer"],
+        },
+      };
+    }
+    if ("children" in node) node.children.forEach(walk);
+  };
+  return (tree: Root) => walk(tree);
+}
+
+// remark-html sanitizes its output and the default schema drops target/rel
+// from links, so allow just those two on <a>.
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    a: [...(defaultSchema.attributes?.a ?? []), "target", "rel"],
+  },
+};
+
 // remark alone is CommonMark only, which has no strikethrough, tables, task
 // lists or footnotes. remark-gfm adds them so authored markdown renders the
 // same here as it does in GitHub/editor previews.
-export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark()
-    .use(gfm)
-    .use(demoteTopLevelHeadings)
-    .use(html)
+export async function markdownToHtml(
+  markdown: string,
+  { newTabLinks = false }: { newTabLinks?: boolean } = {}
+): Promise<string> {
+  const processor = remark().use(gfm).use(demoteTopLevelHeadings);
+  if (newTabLinks) processor.use(openLinksInNewTab);
+  const result = await processor
+    .use(html, { sanitize: sanitizeSchema })
     .process(markdown);
   return result.toString();
 }
