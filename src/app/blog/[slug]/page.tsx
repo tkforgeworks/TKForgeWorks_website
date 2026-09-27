@@ -56,7 +56,9 @@ export default async function BlogPostPage({
   const data = getContentBySlug<BlogFrontmatter>("blog", slug);
   if (!data) notFound();
 
-  const htmlContent = await markdownToHtml(data.content);
+  const htmlContent = await markdownToHtml(data.content, {
+    newTabLinks: true,
+  });
   const { frontmatter } = data;
   const readingTime = getReadingTime(data.content);
 
