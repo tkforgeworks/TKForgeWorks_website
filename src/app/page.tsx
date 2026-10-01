@@ -20,24 +20,42 @@ export default function Home() {
     <div>
       <JsonLd data={websiteJsonLd()} />
 
-      {/* Hero banner placeholder — swap with real artwork when available */}
-      <div className="flex h-64 w-full items-center justify-center bg-[#cbd5e1] dark:bg-[#334155] md:h-80">
-        <span className="font-sans text-sm font-medium text-text-secondary">
-          Hero banner placeholder
-        </span>
+      {/* Hero banner — band color matches the artwork's solid background so it bleeds edge to edge */}
+      <div className="w-full bg-[#0d001c]">
+        {/* Plain <picture>: static export disables next/image optimization, so it would add nothing.
+            Phones get a taller crop so the logo stays legible; wider screens get the banner,
+            with the browser picking 1x/2x by rendered width. */}
+        <picture>
+          <source
+            media="(max-width: 639px)"
+            srcSet="/tkforgeworks-hero-mobile-no-tagline.png 1500w"
+            sizes="100vw"
+            width={1500}
+            height={1080}
+          />
+          <img
+            src="/tkforgeworks-hero-no-tagline.png"
+            srcSet="/tkforgeworks-hero-no-tagline.png 1280w, /tkforgeworks-hero-no-tagline@2x.png 2560w"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+            width={1280}
+            height={360}
+            alt="TK ForgeWorks logo: a geometric hammer striking an anvil"
+            fetchPriority="high"
+            decoding="async"
+            className="mx-auto block h-auto w-full max-w-[1280px]"
+          />
+        </picture>
       </div>
 
       {/* Hero Section */}
       <section className="bg-background-light py-16">
         <div className="mx-auto max-w-4xl px-6 text-center">
-          <h1 className="font-sans text-4xl font-bold text-purple-primary md:text-5xl">
-            TK ForgeWorks
+          {/* Title and tagline are shown in the hero artwork; keep them for screen readers and SEO */}
+          <h1 className="sr-only">
+            TK ForgeWorks: Where problem-solving meets &quot;let&apos;s see what
+            happens if I try this&quot;
           </h1>
-          <p className="mt-4 font-sans text-lg font-normal text-purple-secondary">
-            Where problem-solving meets &quot;let&apos;s see what happens if I
-            try <em>this</em>&quot;
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl font-serif text-lg text-text-primary">
+          <p className="mx-auto max-w-2xl font-serif text-lg text-text-primary">
             Engineering solutions and creative projects through trial, error, and
             stubborn persistence.
           </p>
