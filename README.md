@@ -195,7 +195,7 @@ The About and FAQ pages pull content from markdown files in `content/pages/`. Ed
 - **About page**: `content/pages/about.md` (renders at `/about`)
 - **FAQ page**: `content/pages/faq.md` (renders at `/faq`)
 
-The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.tsx` — editing it requires changing the React component directly.
+The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.tsx` — editing it requires changing the React component directly. The business details it shows (legal name, mailing address, email) come from `src/lib/site.ts`, which also feeds the footer and the Organization structured data — update them there.
 
 ### Pages Frontmatter Reference
 
@@ -212,7 +212,7 @@ The Contact page (`/contact`) is currently hardcoded in `src/app/contact/page.ts
 
 ## App Privacy Policies
 
-Per-app privacy policies live in `content/privacy/` and render at `/privacy/<filename>/` (e.g. `content/privacy/cheesy-scribe.md` → `/privacy/cheesy-scribe/`). App stores and the apps' About screens link to these URLs, so **never rename a file once an app ships with its link**. They are included in the sitemap automatically.
+Per-app privacy policies live in `content/privacy/` and render at `/privacy/<filename>/` (e.g. `content/privacy/cheesy-scribe.md` → `/privacy/cheesy-scribe/`). App stores and the apps' About screens link to these URLs, so **never rename a file once an app ships with its link**. They are included in the sitemap automatically. The site's own policy lives alongside them as `content/privacy/website.md` (`/privacy/website/`, linked from the footer).
 
 | Field         | Required | Type   | Description |
 |---------------|----------|--------|-------------|

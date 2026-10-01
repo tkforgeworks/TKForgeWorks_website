@@ -6,6 +6,9 @@ import {
   SITE_AUTHOR,
   SITE_OG_IMAGE,
   SOCIAL_PROFILES,
+  LEGAL_NAME,
+  BUSINESS_EMAIL,
+  BUSINESS_ADDRESS,
 } from "@/lib/site";
 
 type OpenGraph = NonNullable<Metadata["openGraph"]>;
@@ -29,6 +32,7 @@ export function openGraphFor(overrides: OpenGraph): OpenGraph {
   };
 }
 
+const organizationId = `${SITE_URL}/#organization`;
 const personId = `${SITE_URL}/#person`;
 const websiteId = `${SITE_URL}/#website`;
 
@@ -37,11 +41,29 @@ export function websiteJsonLd() {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": organizationId,
+        name: SITE_NAME,
+        legalName: LEGAL_NAME,
+        url: `${SITE_URL}/`,
+        logo: `${SITE_URL}/logo-mark.svg`,
+        email: BUSINESS_EMAIL,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: BUSINESS_ADDRESS.street,
+          addressLocality: BUSINESS_ADDRESS.city,
+          addressRegion: BUSINESS_ADDRESS.region,
+          postalCode: BUSINESS_ADDRESS.postalCode,
+          addressCountry: BUSINESS_ADDRESS.country,
+        },
+        sameAs: SOCIAL_PROFILES,
+      },
+      {
         "@type": "Person",
         "@id": personId,
         name: SITE_AUTHOR,
         url: `${SITE_URL}/about/`,
-        sameAs: SOCIAL_PROFILES,
+        worksFor: { "@id": organizationId },
       },
       {
         "@type": "WebSite",
@@ -49,7 +71,7 @@ export function websiteJsonLd() {
         name: SITE_NAME,
         url: `${SITE_URL}/`,
         description: SITE_DESCRIPTION,
-        publisher: { "@id": personId },
+        publisher: { "@id": organizationId },
       },
     ],
   };
@@ -65,8 +87,8 @@ export function blogPostingJsonLd(post: {
   author?: string;
 }) {
   const url = `${SITE_URL}/blog/${post.slug}/`;
-  // The site-level Person node carries the sameAs profile links, so refer to
-  // it unless this post names a different author.
+  // Refer to the site-level Person node unless this post names a different
+  // author.
   const author =
     post.author && post.author !== SITE_AUTHOR
       ? { "@type": "Person", name: post.author }
@@ -82,7 +104,7 @@ export function blogPostingJsonLd(post: {
     dateModified: post.updated ?? post.date,
     keywords: post.tags,
     author,
-    publisher: { "@id": personId },
+    publisher: { "@id": organizationId },
     image: `${SITE_URL}${SITE_OG_IMAGE}`,
     isPartOf: { "@id": websiteId },
   };

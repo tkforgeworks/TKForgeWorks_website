@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LEGAL_NAME } from "@/lib/site";
+import { CookieSettingsButton } from "@/components/AnalyticsConsent";
 
 const socialLinks = [
   {
@@ -134,11 +136,18 @@ export default function Footer() {
             >
               Contact
             </Link>
+            <Link
+              href="/privacy/website"
+              className="font-sans text-sm font-medium text-text-secondary no-underline transition-colors hover:text-purple-primary"
+            >
+              Privacy
+            </Link>
+            <CookieSettingsButton className="cursor-pointer font-sans text-sm font-medium text-text-secondary transition-colors hover:text-purple-primary" />
           </nav>
         </div>
         <div className="mt-6 border-t border-border pt-4 text-center">
           <p className="font-serif text-sm text-text-secondary">
-            &copy; {new Date().getFullYear()} TK ForgeWorks. Built with stubborn
+            &copy; {new Date().getFullYear()} {LEGAL_NAME}. Built with stubborn
             persistence.
           </p>
         </div>
