@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins, Source_Serif_4, JetBrains_Mono } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AnalyticsConsent from "@/components/AnalyticsConsent";
 import {
   SITE_URL,
   SITE_NAME,
@@ -101,8 +101,8 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
         </ThemeProvider>
+        <AnalyticsConsent gaId="G-F2FJ799L5V" />
       </body>
-      <GoogleAnalytics gaId="G-F2FJ799L5V" />
     </html>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LEGAL_NAME, BUSINESS_EMAIL, BUSINESS_ADDRESS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -38,7 +39,14 @@ export default function ContactPage() {
             <span className="font-sans text-sm font-medium text-purple-dark">
               Email
             </span>
-            <p className="mt-1">info@tkforgeworks.com</p>
+            <p className="mt-1">
+              <a
+                href={`mailto:${BUSINESS_EMAIL}`}
+                className="text-purple-secondary underline underline-offset-2 transition-colors hover:text-purple-primary"
+              >
+                {BUSINESS_EMAIL}
+              </a>
+            </p>
           </div>
           <div>
             <span className="font-sans text-sm font-medium text-purple-dark">
@@ -58,6 +66,33 @@ export default function ContactPage() {
               <li>Game development discussions</li>
               <li>Engineering problem solving</li>
             </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-lg border border-purple-tint bg-background-light p-4 md:p-8">
+        <h2 className="font-sans text-xl font-semibold text-purple-primary">
+          Business Information
+        </h2>
+        <div className="mt-6 space-y-4 font-serif text-text-primary">
+          <div>
+            <span className="font-sans text-sm font-medium text-purple-dark">
+              Legal Name
+            </span>
+            <p className="mt-1">{LEGAL_NAME}</p>
+          </div>
+          <div>
+            <span className="font-sans text-sm font-medium text-purple-dark">
+              Mailing Address
+            </span>
+            <address className="mt-1 not-italic">
+              {LEGAL_NAME}
+              <br />
+              {BUSINESS_ADDRESS.street}
+              <br />
+              {BUSINESS_ADDRESS.city}, {BUSINESS_ADDRESS.region}{" "}
+              {BUSINESS_ADDRESS.postalCode}
+            </address>
           </div>
         </div>
       </div>
