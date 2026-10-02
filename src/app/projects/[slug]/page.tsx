@@ -4,10 +4,16 @@ import Link from "next/link";
 import {
   getContentBySlug,
   getContentSlugs,
+  getPostsForProject,
   markdownToHtml,
   type ProjectFrontmatter,
 } from "@/lib/content";
+import { projectFeedPath } from "@/lib/feed";
+import { alternatesWithFeed } from "@/lib/seo";
+import { SITE_NAME } from "@/lib/site";
 import { statusClasses } from "@/lib/status";
+import PostList from "@/components/PostList";
+import RssLink from "@/components/RssLink";
 import { notFound } from "next/navigation";
 
 export const dynamicParams = false;
@@ -27,6 +33,10 @@ export async function generateMetadata({
   return {
     title: data.frontmatter.metaTitle ?? data.frontmatter.title,
     description: data.frontmatter.excerpt,
+    alternates: alternatesWithFeed({
+      path: projectFeedPath(slug),
+      title: `${data.frontmatter.title} · ${SITE_NAME}`,
+    }),
   };
 }
 
@@ -42,6 +52,7 @@ export default async function ProjectPage({
   const htmlContent = await markdownToHtml(data.content);
   const { frontmatter } = data;
   const galleryImages = frontmatter.images ?? [];
+  const posts = getPostsForProject(slug);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
@@ -128,6 +139,25 @@ export default async function ProjectPage({
           ))}
         </div>
       )}
+
+      <section className="mt-16 border-t border-purple-tint pt-10">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 className="font-sans text-2xl font-bold text-purple-primary">
+            Posts about this project
+          </h2>
+          <RssLink href={projectFeedPath(slug)} label="Subscribe" />
+        </div>
+        {posts.length > 0 ? (
+          <div className="mt-6">
+            <PostList posts={posts} headingLevel="h3" />
+          </div>
+        ) : (
+          <p className="mt-4 font-serif text-text-secondary">
+            No posts about {frontmatter.title} yet. Subscribe to hear about the
+            first one.
+          </p>
+        )}
+      </section>
     </div>
   );
 }

@@ -32,7 +32,27 @@ export function openGraphFor(overrides: OpenGraph): OpenGraph {
   };
 }
 
-const organizationId = `${SITE_URL}/#organization`;
+type Alternates = NonNullable<Metadata["alternates"]>;
+
+// Same problem as openGraph: a page-level alternates object replaces the
+// layout's wholesale, dropping its canonical link and site feed. Pages that
+// advertise their own feed (project and tag pages) restate both here.
+export function alternatesWithFeed(feed: {
+  path: string;
+  title: string;
+}): Alternates {
+  return {
+    canonical: "./",
+    types: {
+      "application/rss+xml": [
+        { url: `${SITE_URL}${feed.path}`, title: feed.title },
+        { url: `${SITE_URL}/feed.xml`, title: `${SITE_NAME} (all posts)` },
+      ],
+    },
+  };
+}
+
+const organizationId =`${SITE_URL}/#organization`;
 const personId = `${SITE_URL}/#person`;
 const websiteId = `${SITE_URL}/#website`;
 

@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 import {
   getAllContent,
+  getAllTags,
   getContentSlugs,
-  type BlogFrontmatter,
+  getPublishedPosts,
   type ProjectFrontmatter,
 } from "@/lib/content";
+import { tagPath } from "@/lib/feed";
 import { SITE_URL } from "@/lib/site";
 
 // Required by output: "export" so this route is rendered once at build time.
@@ -33,14 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Drafts are built as pages (so they can be previewed by URL) but are
   // noindex and must stay out of the sitemap.
-  const posts: MetadataRoute.Sitemap = getAllContent<BlogFrontmatter>("blog")
-    .filter((p) => p.frontmatter.status === "published")
-    .map((p) => ({
-      url: `${SITE_URL}/blog/${p.slug}/`,
-      lastModified: new Date(p.frontmatter.updated ?? p.frontmatter.date),
-      changeFrequency: "yearly",
-      priority: 0.6,
-    }));
+  const posts: MetadataRoute.Sitemap = getPublishedPosts().map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}/`,
+    lastModified: new Date(p.frontmatter.updated ?? p.frontmatter.date),
+    changeFrequency: "yearly",
+    priority: 0.6,
+  }));
 
   const privacy: MetadataRoute.Sitemap = getContentSlugs("privacy").map(
     (slug) => ({
@@ -50,5 +50,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  return [...staticPages, ...projects, ...posts, ...privacy];
+  const tags: MetadataRoute.Sitemap = getAllTags().map((t) => ({
+    url: `${SITE_URL}${tagPath(t.slug)}`,
+    changeFrequency: "weekly",
+    priority: 0.5,
+  }));
+
+  return [...staticPages, ...projects, ...posts, ...tags, ...privacy];
 }
