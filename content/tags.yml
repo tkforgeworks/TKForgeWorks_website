@@ -1,0 +1,19 @@
+# Every tag a blog post may use. A post's "tags" list must only contain keys
+# from this file, or the build fails and names the post.
+#
+# The key is the tag's URL slug (/blog/tags/<key>/) and must be lowercase
+# letters, numbers and hyphens. "label" is what readers see; "description"
+# shows on the tag's page and is the subtitle of its RSS feed.
+#
+# To add a tag:
+#   my-new-tag:
+#     label: "My New Tag"
+#     description: "One line about what posts with this tag cover."
+
+personal:
+  label: "Personal"
+  description: "Life behind the workshop: background, updates, and the occasional ramble."
+
+introduction:
+  label: "Introduction"
+  description: "Where it all starts: who I am and what this site is for."

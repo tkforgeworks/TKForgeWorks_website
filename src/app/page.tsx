@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllContent, type ProjectFrontmatter, type BlogFrontmatter } from "@/lib/content";
+import { getAllContent, getPublishedPosts, type ProjectFrontmatter } from "@/lib/content";
 import JsonLd from "@/components/JsonLd";
 import { websiteJsonLd } from "@/lib/seo";
 
@@ -7,14 +7,7 @@ export default function Home() {
   const projects = getAllContent<ProjectFrontmatter>("projects").filter(
     (p) => p.frontmatter.featured
   );
-  const posts = getAllContent<BlogFrontmatter>("blog")
-    .filter((p) => p.frontmatter.status === "published")
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
-    )
-    .slice(0, 3);
+  const posts = getPublishedPosts().slice(0, 3);
 
   return (
     <div>

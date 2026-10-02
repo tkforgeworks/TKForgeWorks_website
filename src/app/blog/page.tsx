@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  getAllContent,
-  getReadingTime,
-  type BlogFrontmatter,
-} from "@/lib/content";
+import { getAllTags, getPostsForTag, getPublishedPosts } from "@/lib/content";
+import { tagPath } from "@/lib/feed";
+import PostList from "@/components/PostList";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -13,13 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const posts = getAllContent<BlogFrontmatter>("blog")
-    .filter((p) => p.frontmatter.status === "published")
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
-    );
+  const posts = getPublishedPosts();
+  // Only offer tags that have at least one published post behind them.
+  const tags = getAllTags()
+    .map((tag) => ({ ...tag, count: getPostsForTag(tag.slug).length }))
+    .filter((tag) => tag.count > 0);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
@@ -32,45 +28,29 @@ export default function BlogPage() {
         would be easy?&quot;
       </p>
 
+      {tags.length > 0 && (
+        <nav aria-label="Browse by tag" className="mt-6">
+          <h2 className="font-sans text-sm font-medium text-text-secondary">
+            Browse by tag
+          </h2>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Link
+                key={tag.slug}
+                href={tagPath(tag.slug)}
+                className="rounded bg-purple-tint px-2.5 py-1 font-sans text-sm text-purple-dark no-underline transition-colors hover:bg-purple-tint-hover"
+              >
+                {tag.label}{" "}
+                <span className="text-text-secondary">({tag.count})</span>
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
+
       {posts.length > 0 ? (
-        <div className="mt-10 flex flex-col gap-8">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group border-b border-purple-tint pb-8 no-underline last:border-0"
-            >
-              <div className="flex items-center gap-3 font-sans text-sm text-text-secondary">
-                <time dateTime={post.frontmatter.date}>
-                  {new Date(post.frontmatter.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
-                <span>&middot;</span>
-                <span>{getReadingTime(post.content)} min read</span>
-              </div>
-              <h2 className="mt-2 font-sans text-xl font-semibold text-purple-primary group-hover:text-purple-secondary">
-                {post.frontmatter.title}
-              </h2>
-              <p className="mt-2 font-serif text-text-secondary">
-                {post.frontmatter.excerpt}
-              </p>
-              {post.frontmatter.tags.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {post.frontmatter.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded bg-purple-tint px-2 py-0.5 font-sans text-xs text-purple-dark"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Link>
-          ))}
+        <div className="mt-10">
+          <PostList posts={posts} />
         </div>
       ) : (
         <p className="mt-8 font-serif text-text-secondary">
