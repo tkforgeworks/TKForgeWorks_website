@@ -15,7 +15,7 @@ npm run lint      # Run ESLint
 
 ## Technology Stack
 
-- **Framework**: Next.js 15 (App Router, static export)
+- **Framework**: Next.js 16 (App Router, static export, Turbopack builds)
 - **Styling**: Tailwind CSS 4 with custom color palette
 - **Content**: Markdown files with YAML frontmatter (parsed by gray-matter, rendered by remark)
 - **Fonts**: Poppins (headers), Source Serif 4 (body), JetBrains Mono (code)
@@ -31,10 +31,13 @@ All site content lives in the `content/` directory as markdown files. No code ch
 
 ```
 content/
+├── tags.yml             # Every tag a blog post may use (see "Tags and Project Links")
 ├── blog/               # Blog posts (listed at /blog, detail at /blog/:slug)
 │   └── my-post.md
 ├── projects/            # Project pages (listed at /projects, detail at /projects/:slug)
 │   └── my-project.md
+├── privacy/             # Per-app privacy policies (/privacy/:slug)
+│   └── my-app.md
 └── pages/               # Static pages (rendered at their own routes)
     ├── about.md          # /about
     └── faq.md            # /faq
@@ -66,7 +69,8 @@ Create a new file at `content/blog/<your-slug>.md`:
 title: "Your Post Title"
 date: "2026-03-20"
 excerpt: "A one or two sentence summary shown on the blog listing page"
-tags: ["topic-one", "topic-two"]
+tags: ["personal"]
+projects: ["anvil"]
 status: "draft"
 ---
 
@@ -93,7 +97,8 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 | `date`     | Yes      | string   | Publication date in `YYYY-MM-DD` format, used for sorting |
 | `updated`  | No       | string   | Date of the last substantive edit in `YYYY-MM-DD` format. Sets the sitemap `lastmod`, `article:modified_time` and JSON-LD `dateModified` |
 | `excerpt`  | Yes      | string   | Short summary shown on the `/blog` listing page |
-| `tags`     | Yes      | string[] | Array of topic tags displayed as badges |
+| `tags`     | Yes      | string[] | Tag slugs. Each must be a key in `content/tags.yml`, otherwise the build fails. Use `[]` for none |
+| `projects` | No       | string or string[] | Projects this post is about: filenames from `content/projects/` without `.md`, e.g. `"anvil"` or `["anvil", "aether-gears"]`. Leave it out for general posts |
 | `status`   | Yes      | string   | `"published"` or `"draft"` |
 | `author`   | No       | string   | Byline for this post's link-preview and structured-data metadata. Defaults to `tkforgeworks` (set in `src/lib/site.ts`). Use it if you want a specific post credited to your full name |
 
@@ -105,7 +110,37 @@ You can use **bold**, *italic*, `inline code`, and all standard markdown.
 - The 3 most recent published posts appear on the homepage
 - Reading time is calculated automatically (~200 words per minute)
 - Each published post emits Open Graph `article` tags and BlogPosting JSON-LD built from its frontmatter, so link previews and search results need no extra fields
-- Published posts are also listed, full content included, in the RSS feed at `/feed.xml` (generated at build time by `src/app/feed.xml/route.ts`)
+- Tags link to their tag page, and a post with `projects` shows a "Part of:" line linking to each project
+- Published posts are also listed, full content included, in the RSS feeds: the site-wide `/feed.xml`, plus the feed of each tag and project the post belongs to (see below)
+
+### Tags and Project Links
+
+Tags and projects are checked at build time, so a typo fails the build with a message naming the post instead of quietly dropping it from a page or feed.
+
+**Tags** are defined once in `content/tags.yml`:
+
+```yaml
+personal:
+  label: "Personal"
+  description: "Life behind the workshop: background, updates, and the occasional ramble."
+```
+
+- The key (`personal`) is the tag's slug: what goes in a post's `tags` list and in the URL. Lowercase letters, numbers and hyphens only.
+- `label` is what readers see; `description` appears on the tag's page and as its RSS feed's subtitle.
+- **To add a tag**, add an entry to `tags.yml` in the same commit as the post that first uses it.
+- Each tag gets a page at `/blog/tags/<slug>/` and appears in the "Browse by tag" row on `/blog` once it has a published post.
+
+**Projects** need no extra file. A project's ID is its filename: `content/projects/anvil.md` is `anvil`. Add `projects: ["anvil"]` to a post to list it at the bottom of that project's page and include it in the project's feed. The key must be lowercase `projects`; `Projects:` fails the build.
+
+**RSS feeds** (all generated at build time):
+
+| Feed | URL | Contains |
+|------|-----|----------|
+| Site-wide | `/feed.xml` | Every published post |
+| Per project | `/projects/<slug>/feed.xml` | Published posts that list the project. Exists for every project, even before its first post |
+| Per tag | `/blog/tags/<slug>/feed.xml` | Published posts with the tag |
+
+Project and tag pages link to their own feed, and feed readers given a project or tag page URL are offered that feed as well as the site-wide one.
 
 ### Social Sharing Image
 
@@ -185,6 +220,8 @@ Include whatever context, technical details, or narrative you want.
   - **Paused** — amber
   - **Planning** — blue
 - Hero images display at the top of the project detail page if provided
+- The **filename is the project's ID**: blog posts link to a project by it (see [Tags and Project Links](#tags-and-project-links)), and it sets the URL. Renaming a project file changes its URL, and the build fails until posts that link to the old name are updated
+- The bottom of each project page lists the published posts about it, with a link to the project's RSS feed
 
 ---
 
@@ -268,7 +305,7 @@ main ← production (live site at tkforgeworks.com)
 
 - **`main`** is the production branch — every merge triggers a Cloudflare Pages deploy
 - **Feature/content branches** are created from `main` and merged back via pull request
-- **Branch protection** requires CI checks (lint, typecheck, build) to pass before merging
+- **Branch protection** blocks direct pushes to `main` for everyone, admins included: every change goes through a pull request, and CI (lint, typecheck, build) must pass before it can merge
 
 ### Step-by-Step: Publishing New Content
 
@@ -380,19 +417,20 @@ def hello():
 │   │   ├── layout.tsx        # Root layout (fonts, theme, header/footer)
 │   │   ├── page.tsx          # Homepage
 │   │   ├── about/page.tsx    # About (reads content/pages/about.md)
-│   │   ├── blog/             # Blog listing + [slug] detail
+│   │   ├── blog/             # Blog listing, [slug] detail, tags/[tag] pages and feeds
 │   │   ├── contact/page.tsx  # Contact (hardcoded JSX)
 │   │   ├── faq/page.tsx      # FAQ (reads content/pages/faq.md)
-│   │   ├── projects/         # Projects listing + [slug] detail
+│   │   ├── projects/         # Projects listing, [slug] detail and per-project feeds
 │   │   ├── not-found.tsx     # Custom 404 (exported as out/404.html)
-│   │   ├── feed.xml/route.ts # RSS feed of published posts
+│   │   ├── feed.xml/route.ts # Site-wide RSS feed of published posts
 │   │   ├── sitemap.ts        # sitemap.xml, built from content/
 │   │   └── robots.ts         # robots.txt
-│   ├── components/           # Header, Footer, ThemeToggle, ThemeProvider, JsonLd
+│   ├── components/           # Header, Footer, PostList, TagList, RssLink, theme and JSON-LD components
 │   └── lib/
-│       ├── content.ts        # Content loading, markdown parsing, utilities
+│       ├── content.ts        # Content loading and checks, tags, posts, markdown parsing
+│       ├── feed.ts           # Shared RSS builder and feed/tag URL helpers
 │       ├── site.ts           # Site URL, name, author and social profile constants
-│       └── seo.ts            # Open Graph and JSON-LD helpers
+│       └── seo.ts            # Open Graph, alternates and JSON-LD helpers
 ├── scripts/og/               # Source SVG for the social sharing image
 ├── zz-project-documentation/ # Internal design docs, drafts, style guide
 ├── next.config.mjs           # Static export config
@@ -432,6 +470,9 @@ see [`NOTICE`](NOTICE).
 - Check that all **required frontmatter fields** are present (see reference tables above)
 - Verify frontmatter uses valid YAML syntax (strings in quotes, arrays in brackets)
 - Make sure the `---` delimiters are on their own lines with no extra whitespace
+- `tag "x" is not defined in content/tags.yml`: add the tag to `tags.yml` or fix the spelling in the post
+- `project "x" doesn't match a file in content/projects/`: use the project's filename without `.md`. The error lists the valid names
+- `frontmatter key "Projects" must be lowercase`: frontmatter keys are case-sensitive
 
 ### Images not showing
 
@@ -447,5 +488,5 @@ see [`NOTICE`](NOTICE).
 
 ### Content not updating on the live site
 
-- Confirm your changes were merged to the correct branch (`staging` or `main`)
+- Confirm your pull request was merged into `main`; only `main` deploys to the live site
 - Check the Cloudflare Pages dashboard for build status and any build errors
