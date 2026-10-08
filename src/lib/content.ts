@@ -105,6 +105,31 @@ function demoteTopLevelHeadings() {
   };
 }
 
+// next.config sets trailingSlash, so "/contact" is served as a 308 to
+// "/contact/". next/link adds the slash itself but markdown links don't, and
+// every slashless internal link hands search engines a redirecting URL to
+// report. Add the slash to root-relative page links (and reference
+// definitions) whose last segment isn't a file like /feed.xml, keeping any
+// ?query or #hash after it.
+function withTrailingSlash(url: string): string {
+  if (!url.startsWith("/") || url.startsWith("//")) return url;
+  const [, pathname, suffix] = url.match(/^([^?#]*)(.*)$/)!;
+  if (pathname.endsWith("/")) return url;
+  const lastSegment = pathname.slice(pathname.lastIndexOf("/") + 1);
+  if (lastSegment.includes(".")) return url;
+  return `${pathname}/${suffix}`;
+}
+
+function addTrailingSlashToInternalLinks() {
+  const walk = (node: Nodes) => {
+    if (node.type === "link" || node.type === "definition") {
+      node.url = withTrailingSlash(node.url);
+    }
+    if ("children" in node) node.children.forEach(walk);
+  };
+  return (tree: Root) => walk(tree);
+}
+
 // Blog posts open every link in a new tab so following one never pulls the
 // reader out of the post. Same-page "#" anchors (footnotes, section jumps)
 // are left alone. The arrow marker is added in CSS off a[target="_blank"].
@@ -145,7 +170,10 @@ export async function markdownToHtml(
   markdown: string,
   { newTabLinks = false }: { newTabLinks?: boolean } = {}
 ): Promise<string> {
-  const processor = remark().use(gfm).use(demoteTopLevelHeadings);
+  const processor = remark()
+    .use(gfm)
+    .use(demoteTopLevelHeadings)
+    .use(addTrailingSlashToInternalLinks);
   if (newTabLinks) processor.use(openLinksInNewTab);
   const result = await processor
     .use(html, { sanitize: sanitizeSchema })
