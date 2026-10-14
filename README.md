@@ -20,6 +20,7 @@ npm run lint      # Run ESLint
 - **Content**: Markdown files with YAML frontmatter (parsed by gray-matter, rendered by remark)
 - **Fonts**: Poppins (headers), Source Serif 4 (body), JetBrains Mono (code)
 - **Deployment**: Cloudflare Pages (static output from `out/` directory)
+- **Server code**: Cloudflare Pages Functions in `functions/` (only the app feedback relay)
 
 ---
 
@@ -260,6 +261,18 @@ Per-app privacy policies live in `content/privacy/` and render at `/privacy/<fil
 
 ---
 
+## App Feedback Relay
+
+`functions/api/feedback.ts` is a Cloudflare Pages Function served at `https://tkforgeworks.com/api/feedback`. Apps POST their in-app feedback form to it as JSON and it emails the form to `support@tkforgeworks.com` through Resend, so no mail key ever ships inside an app. It is the site's only server code; Pages deploys `functions/` with every build, previews included, and nothing else is needed.
+
+- **Secret**: `RESEND_API_KEY` (a Resend key with sending access to `tkforgeworks.com`), set in Cloudflare → Workers & Pages → `tkforgeworks-website` → Settings → Variables and Secrets, for both Production and Preview.
+- **Adding an app**: add its id and display name to `APPS` in the function. Mail from it is sent as `feedback+<id>@tkforgeworks.com` with a `[<App name>]` subject prefix, so the support inbox can filter by app. Unknown ids are rejected.
+- **Request**: `{ app, topic, rating?, comments, replyEmail?, appVersion, osVersion, device }`; `topic` is `bug`, `idea`, `confusing` or `hello`, `rating` 1-5, `comments` up to 4,000 characters. Responses: `200 {ok:true}`, `400 {error:"invalid"}`, `405`, `413`, `415`, `502 {error:"send_failed"}`.
+- **Rate limit**: a Cloudflare WAF rate-limiting rule on `/api/feedback` (Security → WAF → Rate limiting rules).
+- **Privacy**: an app that uses the relay must say so in its privacy policy (see `content/privacy/cheesy-scribe.md`).
+
+---
+
 ## Working with Images
 
 Images are served from the `public/` directory. Any file in `public/` is available at the site root.
@@ -411,6 +424,7 @@ def hello():
 
 ```
 ├── content/                  # Markdown content (blog, projects, pages)
+├── functions/api/feedback.ts # Pages Function: app feedback relay (see above)
 ├── public/images/            # Static images referenced by content
 ├── src/
 │   ├── app/                  # Next.js App Router pages
