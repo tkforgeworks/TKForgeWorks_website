@@ -2,7 +2,7 @@
 title: "Cheesy Scribe Privacy Policy"
 app: "Cheesy Scribe"
 description: "How the Cheesy Scribe cheese-tasting notes app handles your data: your notes stay on your phone unless you sign in, and then only your notes are backed up to your account."
-lastUpdated: "2026-10-18"
+lastUpdated: "2026-10-19"
 ---
 
 Cheesy Scribe is a cheese-tasting notebook for Android made by TK ForgeWorks LLC ("we", "us"). This policy explains what happens to the information you put into the app.
