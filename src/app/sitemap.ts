@@ -7,7 +7,7 @@ import {
   type ProjectFrontmatter,
 } from "@/lib/content";
 import { tagPath } from "@/lib/feed";
-import { SITE_URL } from "@/lib/site";
+import { ACCOUNT_APPS, SITE_URL } from "@/lib/site";
 
 // Required by output: "export" so this route is rendered once at build time.
 export const dynamic = "force-static";
@@ -49,6 +49,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     })
   );
+
+  // Web account-deletion pages (Google Play's deletion URL), one per app
+  // with accounts. They are routes under src/app/privacy/, not content.
+  for (const app of ACCOUNT_APPS) {
+    privacy.push({
+      url: `${SITE_URL}/privacy/${app}/delete-account/`,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    });
+  }
 
   const tags: MetadataRoute.Sitemap = getAllTags().map((t) => ({
     url: `${SITE_URL}${tagPath(t.slug)}`,

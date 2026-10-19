@@ -23,6 +23,20 @@ export const BUSINESS_ADDRESS = {
   country: "US",
 };
 
+// Apps with optional accounts, by privacy slug. Each has a web deletion page
+// at /privacy/<slug>/delete-account/ (src/app/privacy/<slug>/delete-account/),
+// listed in the sitemap, and an entry in functions/api/delete-account.ts.
+export const ACCOUNT_APPS = ["cheesy-scribe"] as const;
+
+// Cloudflare Turnstile site key for the account-deletion forms
+// (/privacy/<app>/delete-account/). Site keys are public and ship in the
+// page; this one is read at build time from the Pages variable
+// NEXT_PUBLIC_TURNSTILE_SITE_KEY (set it for Production and Preview). Without
+// it, Cloudflare's always-passing test key renders so the form works in local
+// dev; a deploy that lacks the variable fails every submission server-side.
+export const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
+
 // Default author for article metadata and structured data. A post can
 // override it with an "author" field in its frontmatter.
 export const SITE_AUTHOR = "tkforgeworks";
