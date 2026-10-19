@@ -17,6 +17,7 @@ const CONSENT_COUNTRIES = new Set([
 ]);
 
 const STORAGE_KEY = "analytics-consent";
+const NO_ANALYTICS_PREFIX = "/apps/";
 const OPEN_EVENT = "open-consent-settings";
 
 type Choice = "granted" | "denied";
@@ -75,6 +76,11 @@ export default function AnalyticsConsent({ gaId }: { gaId: string }) {
   const [reopened, setReopened] = useState(false);
 
   useEffect(() => {
+    // The app hand-off pages (/apps/<slug>/auth/) receive one-time sign-in
+    // codes in their URL. Nothing on them is worth measuring, and a page
+    // view would send that URL to Google, so analytics stays off there.
+    if (window.location.pathname.startsWith(NO_ANALYTICS_PREFIX)) return;
+
     let cancelled = false;
     const stored = readStoredChoice();
     const resolve: Promise<Consent> = stored

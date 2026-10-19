@@ -288,6 +288,19 @@ Google Play requires a web page where a user can ask for their account to be del
 
 ---
 
+## App Links (Android)
+
+Apps built on `forge_core` send their Supabase confirmation and password-reset mails back to `https://tkforgeworks.com/apps/<slug>/auth/` instead of a custom URL scheme, so Android hands the link straight to the app with nothing left behind in the mail client's browser. Two pieces make that work:
+
+- **`public/.well-known/assetlinks.json`**, served at `/.well-known/assetlinks.json` as plain JSON with no redirect: one entry per app, naming its Android package and the SHA-256 fingerprints of the certificates that sign it (the Play app-signing key *and* the upload key, both from Play Console → Test and release → App integrity; they are public values). Android fetches this file when the app is installed and only then treats the path as the app's. Check it with Google's tester: `https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://tkforgeworks.com&relation=delegate_permission/common.handle_all_urls`.
+- **`src/app/apps/<slug>/auth/page.tsx`**, the page anyone sees who lands on the URL without the app (not installed, a desktop browser): it names the app, offers an `intent:` link that reaches the app by package name as a fallback, links to the Play listing, and explains an expired link. The page is `noindex` and not in the sitemap. `src/components/AppLinkLanding.tsx` does the client-side part; `ANDROID_APPS` in `src/lib/site.ts` holds the app names and package names, which must match `assetlinks.json`.
+
+GoTrue appends `?code=…` (a one-time PKCE code, useless without the verifier stored on the phone) or an error in the query or fragment. The landing component reads it once and removes it from the address bar, and `AnalyticsConsent` never loads Google Analytics under `/apps/`, so the code reaches no third party.
+
+- **Adding an app**: add its package and fingerprints to `assetlinks.json`, an entry to `ANDROID_APPS`, and copy the page directory. The app then uses the new URL as its mail redirect (also on its Supabase project's redirect allow list) and declares an `https` intent filter with `android:autoVerify="true"` for `tkforgeworks.com` and the path prefix `/apps/<slug>/auth`.
+
+---
+
 ## Working with Images
 
 Images are served from the `public/` directory. Any file in `public/` is available at the site root.

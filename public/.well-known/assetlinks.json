@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tkforgeworks.cheesy_scribe",
+      "sha256_cert_fingerprints": [
+        "31:B0:12:40:FC:15:48:45:37:8B:AD:D0:A5:B3:3C:97:C0:4E:C5:35:D7:C5:4B:FD:13:8B:48:1B:1A:59:BE:F9",
+        "43:FD:6B:DA:59:84:DB:55:78:20:13:D0:98:AB:F5:62:90:E7:20:5E:74:03:E0:85:F4:D6:44:D5:C3:E8:67:72"
+      ]
+    }
+  }
+]

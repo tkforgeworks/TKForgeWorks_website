@@ -52,3 +52,20 @@ export const SOCIAL_PROFILES = [
   "https://reddit.com/user/tkForgeWorks",
   "https://tkforgeworks.itch.io",
 ];
+
+// Android apps whose sign-in mail links are App Links on this site: the app
+// redirects Supabase's confirmation and reset mails to /apps/<slug>/auth/,
+// Android opens the app for that path because public/.well-known/
+// assetlinks.json vouches for the package, and src/app/apps/<slug>/auth/
+// is the page anyone without the app sees. Package names here must match
+// that file.
+export const ANDROID_APPS = {
+  "cheesy-scribe": {
+    name: "Cheesy Scribe",
+    packageName: "com.tkforgeworks.cheesy_scribe",
+  },
+} as const;
+
+export function playStoreUrl(packageName: string): string {
+  return `https://play.google.com/store/apps/details?id=${packageName}`;
+}
