@@ -29,7 +29,7 @@ You can sign in with a Google account or with an email address and password. Eit
 - your tasting notes: one record per note, holding everything you typed into it (cheese name, maker, origin, price, rating, texture, flavor scores, free-text notes, verdict and dates)
 - one profile record holding your "member since" date and your recent search terms
 
-Your theme and units settings stay on the device and are not synced. Notes you made while signed out are not uploaded unless you choose to attach them when you sign in.
+Your theme and units settings stay on the device and are not synced. Every note belongs either to your account or to nobody: notes you made while signed out are not uploaded unless you choose to add them to the account when you sign in (below).
 
 With an email/password account we send you a confirmation email, and a reset email if you forget your password. Those go out through [Resend](https://resend.com/legal/privacy-policy), an email delivery service, from an @tkforgeworks.com address. If you sign in with Google, Google's own policy applies to that step ([Google's Privacy Policy](https://policies.google.com/privacy)); we receive your email address and a Google account identifier, nothing else from your Google account.
 
@@ -37,11 +37,13 @@ Your data in the account is encrypted in transit, visible only to you (the datab
 
 ### Signing out and deleting your account
 
-Signing out keeps your notes on the phone unless you tick "also erase this phone"; the account and its backup stay on our side until you delete the account.
+**Signing in** with notes already on the phone: the app offers to add them to your account. Notes you add are backed up like any other; notes you leave out stay on the phone, hidden while you're signed in and shown again when you sign out.
 
-Deleting your account removes everything stored in it on our side: the sign-in itself, your email address and username, every backed-up note and your profile record. The account is closed the moment you confirm, so it can no longer be signed in to and every phone that was signed in is signed out. The purge finishes within minutes under normal conditions; if something is down it is retried until it goes through. Nothing is kept, in anonymised form or otherwise.
+**Signing out** removes the account's notes from the phone; the account keeps them on our side, and signing in again downloads them. Notes you made while signed out stay on the phone and are shown again. If some changes haven't been backed up yet, the app warns you before you sign out.
 
-You can delete from the app (**Account → Delete account**, then type the confirmation word) or, if you no longer have the app, at [tkforgeworks.com/privacy/cheesy-scribe/delete-account](https://tkforgeworks.com/privacy/cheesy-scribe/delete-account/): enter your address and confirm from the one-time link we email you through Resend. Notes kept on your phone while signed out are untouched by either.
+**Deleting your account** removes everything stored in it on our side: the sign-in itself, your email address and username, every backed-up note and your profile record. The account is closed the moment you confirm, so it can no longer be signed in to and every phone that was signed in is signed out. The purge finishes within a few minutes, and in any case within 24 hours. Nothing is kept, in anonymised form or otherwise.
+
+You can delete from the app (**Account → Delete account**, then type DELETE to confirm) or, if you no longer have the app, at [tkforgeworks.com/privacy/cheesy-scribe/delete-account](https://tkforgeworks.com/privacy/cheesy-scribe/delete-account/): enter your address and confirm from the one-time link we email you through Resend. Notes kept on your phone while signed out are untouched by either.
 
 ## Feedback you send
 
@@ -78,7 +80,7 @@ Each processes your data only to provide the service described. Nobody else gets
 
 Without an account: delete individual notes in the app, or remove everything by clearing the app's storage in Android settings or uninstalling the app. Nothing of it exists on our side.
 
-With an account: delete your account as described above; that removes everything we hold for you within minutes under normal conditions.
+With an account: delete your account as described above; that removes everything we hold for you within a few minutes, and in any case within 24 hours.
 
 Feedback: email [support@tkforgeworks.com](mailto:support@tkforgeworks.com) and tell us roughly when you sent it (and the email address, if you gave one). We'll delete it from our inbox.
 
