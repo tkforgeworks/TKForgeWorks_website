@@ -128,8 +128,8 @@ export default function DeleteAccountForm({
         <p className="mt-2">
           Thanks for confirming. Your {appName} account is now closed: it can
           no longer be signed in to, and everything stored in it is being
-          removed. Under normal conditions that finishes within a few
-          minutes. You can close this page.
+          removed. That finishes within a few minutes, and in any case within
+          24 hours. You can close this page.
         </p>
         <p className="mt-2">
           Anything kept only on your phone is untouched. If you still have

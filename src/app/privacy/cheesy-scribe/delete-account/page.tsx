@@ -53,9 +53,8 @@ export default function DeleteAccountPage() {
         <p>
           As soon as the deletion is confirmed the account is closed: it can no
           longer be signed in to, and every phone that was signed in is signed
-          out. The purge itself runs within minutes under normal conditions;
-          if something is down it is retried until it goes through. Nothing is
-          kept, in anonymised form or otherwise.
+          out. The purge itself finishes within a few minutes, and in any case
+          within 24 hours. Nothing is kept, in anonymised form or otherwise.
         </p>
         <p>
           Notes you made on your phone while signed out are untouched: they
