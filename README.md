@@ -20,7 +20,7 @@ npm run lint      # Run ESLint
 - **Content**: Markdown files with YAML frontmatter (parsed by gray-matter, rendered by remark)
 - **Fonts**: Poppins (headers), Source Serif 4 (body), JetBrains Mono (code)
 - **Deployment**: Cloudflare Pages (static output from `out/` directory)
-- **Server code**: Cloudflare Pages Functions in `functions/` (only the app feedback relay)
+- **Server code**: Cloudflare Pages Functions in `functions/` (the app feedback relay and the account-deletion relay)
 
 ---
 
@@ -263,13 +263,41 @@ Per-app privacy policies live in `content/privacy/` and render at `/privacy/<fil
 
 ## App Feedback Relay
 
-`functions/api/feedback.ts` is a Cloudflare Pages Function served at `https://tkforgeworks.com/api/feedback`. Apps POST their in-app feedback form to it as JSON and it emails the form to `support@tkforgeworks.com` through Resend, so no mail key ever ships inside an app. It is the site's only server code; Pages deploys `functions/` with every build, previews included, and nothing else is needed.
+`functions/api/feedback.ts` is a Cloudflare Pages Function served at `https://tkforgeworks.com/api/feedback`. Apps POST their in-app feedback form to it as JSON and it emails the form to `support@tkforgeworks.com` through Resend, so no mail key ever ships inside an app. Pages deploys `functions/` with every build, previews included, and nothing else is needed.
 
 - **Secret**: `RESEND_API_KEY` (a Resend key with sending access to `tkforgeworks.com`), set in Cloudflare → Workers & Pages → `tkforgeworks-website` → Settings → Variables and Secrets, for both Production and Preview.
 - **Adding an app**: add its id and display name to `APPS` in the function. Mail from it is sent as `feedback+<id>@tkforgeworks.com` with a `[<App name>]` subject prefix, so the support inbox can filter by app. Unknown ids are rejected.
 - **Request**: `{ app, topic, rating?, comments, replyEmail?, appVersion, osVersion, device }`; `topic` is `bug`, `idea`, `confusing` or `hello`, `rating` 1-5, `comments` up to 4,000 characters. Responses: `200 {ok:true}`, `400 {error:"invalid"}`, `405`, `413`, `415`, `502 {error:"send_failed"}`.
 - **Rate limit**: a Cloudflare WAF rate-limiting rule on `/api/feedback` (Security → WAF → Rate limiting rules).
 - **Privacy**: an app that uses the relay must say so in its privacy policy (see `content/privacy/cheesy-scribe.md`).
+
+---
+
+## App Account Deletion
+
+Google Play requires a web page where a user can ask for their account to be deleted. Apps built on `forge_core` (Supabase accounts) get one at `/privacy/<app>/delete-account/`: a page under `src/app/privacy/<app>/delete-account/page.tsx` that explains what deletion removes and renders `src/components/DeleteAccountForm.tsx`, an email field plus a [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) widget posting to `functions/api/delete-account.ts` at `/api/delete-account`. That function checks the Turnstile token, then forwards `{ email }` to the app's `forge-delete-request` Supabase Edge Function with a shared header secret. The Edge Function emails a one-time confirmation link if the address has an account; the link lands the user back on the same page with `?status=done` or `?status=invalid`. The website holds no Supabase key.
+
+- **Answers never reveal accounts.** Once a request passes validation and Turnstile, the response is `200 {ok:true}` whether or not the address has an account and whether or not the upstream call worked (failures are logged in the Pages Function logs). Other responses: `400 {error:"invalid"}` (bad email, unknown app, missing token), `403 {error:"challenge"}` (Turnstile refused), `405`, `413`, `415`, `503 {error:"unavailable"}` (a secret is missing or Turnstile's verifier was unreachable).
+- **Secrets and variables**, set in Cloudflare → Workers & Pages → `tkforgeworks-website` → Settings → Variables and Secrets, for both Production and Preview:
+  - `TURNSTILE_SECRET_KEY` (secret): the Turnstile widget's secret key.
+  - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (plain-text variable, read at **build** time): the widget's site key. It is public and ends up in the page; `src/lib/site.ts` falls back to Cloudflare's always-passing test key so the form works in `next dev`, but a deploy without the variable fails every submission server-side. The widget's hostname list must include `tkforgeworks.com` and `*.tkforgeworks-website.pages.dev` for previews.
+  - `FORGE_DELETE_SECRET` (secret): the shared header secret, the same value as `FORGE_WEB_DELETE_SECRET` on the app's Supabase project.
+  - `FORGE_DELETE_URL_<APP>` (secret), one per app: the full URL of that app's `forge-delete-request` Edge Function, e.g. `FORGE_DELETE_URL_CHEESY_SCRIBE`.
+- **Rate limit**: a Cloudflare WAF rate-limiting rule on `/api/delete-account`, like the feedback relay's.
+- **Adding an app**: add its id and `urlVar` to `APPS` in the function, its slug to `ACCOUNT_APPS` in `src/lib/site.ts` (sitemap), copy the page directory, and set the new URL secret. The app's privacy policy must name the page; Play Console wants the URL under App content → Account deletion.
+
+---
+
+## App Links (Android)
+
+Apps built on `forge_core` send their Supabase confirmation and password-reset mails back to `https://tkforgeworks.com/apps/<slug>/auth/` instead of a custom URL scheme, so Android hands the link straight to the app with nothing left behind in the mail client's browser. Two pieces make that work:
+
+- **`public/.well-known/assetlinks.json`**, served at `/.well-known/assetlinks.json` as plain JSON with no redirect: one entry per app, naming its Android package and the SHA-256 fingerprints of the certificates that sign it. Take the list from Play Console → Grow → Deep links, which proposes the JSON itself: besides the app-signing and upload keys shown under App integrity it includes the Google-held keys Play re-signs the package with (internal app sharing, Play's own test deliveries), and the Console only marks the domain verified once all of them are present. They are public values. Android fetches this file when the app is installed and only then treats the path as the app's. Check it with Google's tester: `https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://tkforgeworks.com&relation=delegate_permission/common.handle_all_urls`.
+- **`src/app/apps/<slug>/auth/page.tsx`**, the page anyone sees who lands on the URL without the app (not installed, a desktop browser): it names the app, offers an `intent:` link that reaches the app by package name as a fallback, links to the Play listing, and explains an expired link. The page is `noindex` and not in the sitemap. `src/components/AppLinkLanding.tsx` does the client-side part; `ANDROID_APPS` in `src/lib/site.ts` holds the app names and package names, which must match `assetlinks.json`.
+
+GoTrue appends `?code=…` (a one-time PKCE code, useless without the verifier stored on the phone) or an error in the query or fragment. The landing component reads it once and removes it from the address bar, and `AnalyticsConsent` never loads Google Analytics under `/apps/`, so the code reaches no third party.
+
+- **Adding an app**: add its package and fingerprints to `assetlinks.json`, an entry to `ANDROID_APPS`, and copy the page directory. The app then uses the new URL as its mail redirect (also on its Supabase project's redirect allow list) and declares an `https` intent filter with `android:autoVerify="true"` for `tkforgeworks.com` and the path prefix `/apps/<slug>/auth`.
 
 ---
 
@@ -424,7 +452,7 @@ def hello():
 
 ```
 ├── content/                  # Markdown content (blog, projects, pages)
-├── functions/api/feedback.ts # Pages Function: app feedback relay (see above)
+├── functions/api/            # Pages Functions: feedback relay, account-deletion relay (see above)
 ├── public/images/            # Static images referenced by content
 ├── src/
 │   ├── app/                  # Next.js App Router pages
@@ -435,11 +463,12 @@ def hello():
 │   │   ├── contact/page.tsx  # Contact (hardcoded JSX)
 │   │   ├── faq/page.tsx      # FAQ (reads content/pages/faq.md)
 │   │   ├── projects/         # Projects listing, [slug] detail and per-project feeds
+│   │   ├── privacy/          # [slug] policies from content/, <app>/delete-account/ pages
 │   │   ├── not-found.tsx     # Custom 404 (exported as out/404.html)
 │   │   ├── feed.xml/route.ts # Site-wide RSS feed of published posts
 │   │   ├── sitemap.ts        # sitemap.xml, built from content/
 │   │   └── robots.ts         # robots.txt
-│   ├── components/           # Header, Footer, PostList, TagList, RssLink, theme and JSON-LD components
+│   ├── components/           # Header, Footer, PostList, TagList, RssLink, DeleteAccountForm, theme and JSON-LD components
 │   └── lib/
 │       ├── content.ts        # Content loading and checks, tags, posts, markdown parsing
 │       ├── feed.ts           # Shared RSS builder and feed/tag URL helpers
