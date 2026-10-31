@@ -481,6 +481,10 @@ def hello():
 └── tsconfig.json
 ```
 
+### App icons
+
+App pages such as `/apps/cheesy-scribe/` show the app's icon, but the icon is all-rights-reserved brand art owned by the app's own repository, so it is never committed here. `scripts/fetch-app-icons.mjs` runs as npm's `prebuild` step (so on every `npm run build`: locally, in CI and on Cloudflare Pages) and downloads each icon from the app repo's `main` branch to `public/apps/<slug>/icon.png`, which `.gitignore` excludes. A failed download stops the build. An icon already on disk is kept, so offline builds work; set `APP_ICONS_REFRESH=1` to fetch it again. `npm run dev` does not fetch, so run a build once before working on those pages. To add an app, add a row to the table at the top of the script.
+
 ## License
 
 Apache-2.0 — see [`LICENSE`](LICENSE). Image assets (logos, icons,
