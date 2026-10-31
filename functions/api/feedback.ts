@@ -7,7 +7,7 @@
 // the support inbox can filter by app.
 //
 // Request: POST application/json
-//   { app, topic, rating?, comments, replyEmail?, appVersion, osVersion, device }
+//   { app, topic, rating?, comments, replyEmail?, appVersion, osVersion, device, screen? }
 // Responses: 200 { ok: true } · 400 { error: "invalid" } · 405 · 413 · 415
 //            · 502 { error: "send_failed" } (Resend refused or unreachable)
 
@@ -46,6 +46,7 @@ interface Feedback {
   appVersion: string;
   osVersion: string;
   device: string;
+  screen: string | null;
 }
 
 function json(status: number, body: unknown): Response {
@@ -104,6 +105,9 @@ function parseFeedback(input: unknown): Feedback | null {
   const appVersion = line(o.appVersion, 40);
   const osVersion = line(o.osVersion, 60);
   const device = line(o.device, 100);
+  const screen =
+    o.screen === undefined || o.screen === null || o.screen === "" ? null : line(o.screen, 60);
+  if (o.screen !== undefined && o.screen !== null && o.screen !== "" && screen === null) return null;
 
   if (!appId || !topic || !appVersion || !osVersion || !device) return null;
   return {
@@ -115,6 +119,7 @@ function parseFeedback(input: unknown): Feedback | null {
     appVersion,
     osVersion,
     device,
+    screen,
   };
 }
 
@@ -129,6 +134,7 @@ function composeEmail(f: Feedback) {
     `App version: ${f.appVersion}`,
     `Android:     ${f.osVersion}`,
     `Device:      ${f.device}`,
+    `Screen:      ${f.screen ?? "not given"}`,
     "",
     f.comments,
   ].join("\n");
