@@ -60,11 +60,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  // App share pages: the one link each app's "Share" row sends. The
+  // /apps/<slug>/auth/ App Link pages are hand-offs and stay out.
+  const apps: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/apps/cheesy-scribe/`,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+  ];
+
   const tags: MetadataRoute.Sitemap = getAllTags().map((t) => ({
     url: `${SITE_URL}${tagPath(t.slug)}`,
     changeFrequency: "weekly",
     priority: 0.5,
   }));
 
-  return [...staticPages, ...projects, ...posts, ...tags, ...privacy];
+  return [
+    ...staticPages,
+    ...apps,
+    ...projects,
+    ...posts,
+    ...tags,
+    ...privacy,
+  ];
 }

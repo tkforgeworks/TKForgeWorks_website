@@ -21,6 +21,9 @@ content/projects/drafts
 # production
 /build
 
+# app icons, fetched at build time from each app repo (scripts/fetch-app-icons.mjs)
+/public/apps/*/icon.png
+
 # misc
 .DS_Store
 *.pem
